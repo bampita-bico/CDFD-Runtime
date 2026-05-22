@@ -1,0 +1,53 @@
+{
+  "title": "CDFD Runtime: Constraint-Driven Flux Dynamics and CDFL Execution Engine",
+  "version": "1.0.0",
+  "creators": [
+    {
+      "name": "Mujjabi, Steve Bico, MD",
+      "affiliation": "Independent Researcher",
+      "orcid": "0009-0001-0556-5516"
+    }
+  ],
+  "license": "agpl-3.0-or-later",
+  "keywords": [
+    "Constraint-Driven Flux Dynamics",
+    "CDFD",
+    "CDFD Runtime",
+    "CDFL",
+    "executable model grammar",
+    "adaptive operating ratio",
+    "structural memory",
+    "domain adapters",
+    "ontology runtime",
+    "deterministic execution",
+    "finite audit",
+    "scientific computing",
+    "computational modeling",
+    "systems science",
+    "complex systems",
+    "physics simulation",
+    "origins of life",
+    "bioenergetics",
+    "hypothesis triage",
+    "falsification",
+    "candidate laws",
+    "Mujjabi laws",
+    "Mujjabi tests",
+    "reproducible research",
+    "open science",
+    "research software"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "10.5281/zenodo.20250821",
+      "relation": "references",
+      "scheme": "doi"
+    },
+    {
+      "identifier": "10.5281/zenodo.20264779",
+      "relation": "references",
+      "scheme": "doi"
+    }
+  ],
+  "description": "Public command-line runtime for Constraint-Driven Flux Dynamics and CDFL. The release includes deterministic CLI execution, the CDFL parser and executor, runtime finite-audit helpers, domain adapters, ontology execution, curated public experiments, a 12-paper runtime spine, compiled PDFs, and tests. Outputs are model diagnostics and falsification targets, not empirical proof or deployed decision systems."
+}

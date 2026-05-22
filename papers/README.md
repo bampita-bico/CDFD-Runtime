@@ -45,8 +45,8 @@ claim language unless the supporting evidence actually exists.
 ## Metadata Standard
 
 The active papers use `Steve Bico Mujjabi, MD`, the Part I ORCID
-`0009-0001-0556-5516`, and month-year dates. Empty tables of contents are not
-used; each paper includes a compact schematic and prior-work references.
+`0009-0001-0556-5516`, and month-year dates. Each paper includes a compact
+schematic and prior-work references.
 
 ## Build
 

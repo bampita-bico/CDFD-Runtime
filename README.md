@@ -7,6 +7,34 @@ The runtime runs locally on the user's machine after clone or download. It does
 not run on the author's laptop, and it does not require access to private
 servers, private datasets, API keys, or hosted infrastructure.
 
+## Author
+
+Steve Bico Mujjabi, MD<br>
+ORCID: https://orcid.org/0009-0001-0556-5516
+
+## Release Naming
+
+CDFD Runtime: Constraint-Driven Flux Dynamics and CDFL Execution Engine
+
+## Keywords
+
+Constraint-Driven Flux Dynamics; CDFD; CDFD Runtime; CDFL; executable model
+grammar; adaptive operating ratio; structural memory; domain adapters;
+ontology runtime; deterministic execution; finite audit; scientific computing;
+computational modeling; systems science; complex systems; physics simulation;
+origins of life; bioenergetics; hypothesis triage; falsification; candidate
+laws; Mujjabi laws; Mujjabi tests; reproducible research; open science;
+research software.
+
+## GitHub Topics
+
+`cdfd`, `cdfd-runtime`, `cdfl`, `constraint-driven-flux-dynamics`,
+`adaptive-systems`, `scientific-computing`, `computational-modeling`,
+`systems-science`, `complex-systems`, `physics-simulation`, `ontology`,
+`domain-adapters`, `reproducible-research`, `open-science`,
+`origins-of-life`, `bioenergetics`, `validation`, `falsifiability`,
+`research-software`, `agplv3`
+
 ## Quickstart
 
 ```bash
@@ -64,6 +92,11 @@ python -m pytest -q tests/test_cli_runtime.py tests/test_new_engine_upgrades.py
 - `experiments/`: curated public scripts, selected outputs, and release-facing reports.
 - `papers/`: 12 runtime papers and rebuilt PDFs.
 - `tests/`: smoke and regression tests for the public runtime surface.
+- `CITATION.cff`: GitHub citation metadata.
+- `.zenodo.json`: Zenodo deposit metadata and keywords.
+- `KEYWORDS.md` and `GITHUB_TOPICS.md`: public indexing terms.
+- `MUJJABI_RUNTIME_LAWS_AND_TESTS.md`: named runtime laws, principles, and
+  falsification tests.
 
 Private web apps, raw exploratory logs, local progress notes, private handoff
 files, unfinished UI code, and internal deployment material are not part of the
@@ -90,6 +123,25 @@ medical advice, engineering certification, empirical proof, or a deployed
 clinical, financial, or safety system. Candidate laws and tests remain open to
 falsification.
 
+## Runtime Papers
+
+The `papers/` folder contains a 12-paper runtime spine with LaTeX sources and
+compiled PDFs. The papers describe the state variables, CDFL grammar, CLI
+execution path, ontology layer, discovery-triage surface, domain adapters, and
+claim boundaries used by the public runtime.
+
+The release-facing experiment filter is
+`experiments/reports/FINAL_RELEASE_EXPERIMENT_SELECTION.md`. It marks selected
+outputs as candidate simulation results and falsification targets, not empirical
+proof.
+
+## Review Status
+
+This repository is research software with accompanying preprint-style papers.
+The tests and public experiments exercise the runtime surface, but they do not
+establish external validation for clinical, engineering, financial, or safety
+decisions.
+
 ## Licensing
 
 This project is dual-licensed:
@@ -101,3 +153,13 @@ This project is dual-licensed:
    environment without the restrictions of the AGPLv3.
 
 **Contact msbico@gmail.com to purchase a commercial license.**
+
+## Citation
+
+Use `CITATION.cff` for software citation metadata. The runtime is separate from
+the Part I and Part II scholarly archives, but it references those releases as
+the public CDFD/CDFL context:
+
+- CDFD Part I: Fundamental Physics, https://doi.org/10.5281/zenodo.20250821
+- CDFD Part II: Origins of Life and Tri-Regime Bioenergetics,
+  https://doi.org/10.5281/zenodo.20264779

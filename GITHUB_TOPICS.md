@@ -1,7 +1,5 @@
 # GitHub Topics
 
-Use these topics for the public repository:
-
 `cdfd`, `cdfd-runtime`, `cdfl`, `constraint-driven-flux-dynamics`,
 `adaptive-systems`, `scientific-computing`, `computational-modeling`,
 `systems-science`, `complex-systems`, `physics-simulation`, `ontology`,
