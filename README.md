@@ -1,5 +1,7 @@
 # CDFD Runtime
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20343160.svg)](https://doi.org/10.5281/zenodo.20343160)
+
 CDFD Runtime is the public command-line runtime for Constraint-Driven Flux
 Dynamics (CDFD) and the CDFL executable model grammar.
 
@@ -15,6 +17,8 @@ ORCID: https://orcid.org/0009-0001-0556-5516
 ## Release Naming
 
 CDFD Runtime: Constraint-Driven Flux Dynamics and CDFL Execution Engine
+
+Software DOI: https://doi.org/10.5281/zenodo.20343160
 
 ## Keywords
 
@@ -155,6 +159,9 @@ This project is dual-licensed:
 **Contact msbico@gmail.com to purchase a commercial license.**
 
 ## Citation
+
+Mujjabi, S. B. (2026). CDFD Runtime: Constraint-Driven Flux Dynamics and CDFL Execution Engine. Zenodo.<br>
+https://doi.org/10.5281/zenodo.20343160
 
 Use `CITATION.cff` for software citation metadata. The runtime is separate from
 the Part I and Part II scholarly archives, but it references those releases as

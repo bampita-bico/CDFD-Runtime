@@ -2,6 +2,7 @@ cff-version: 1.2.0
 message: "If you use CDFD Runtime, cite this software release and cite the Part I and Part II CDFD archives when their framework or examples are part of your work."
 title: "CDFD Runtime: Constraint-Driven Flux Dynamics and CDFL Execution Engine"
 version: "1.0.1"
+doi: 10.5281/zenodo.20343160
 date-released: 2026-05-22
 license: AGPL-3.0-or-later
 repository-code: "https://github.com/bampita-bico/CDFD-Runtime"

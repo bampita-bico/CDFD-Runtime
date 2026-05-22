@@ -5,6 +5,8 @@ in May 2026 to align with the current CLI-first runtime, CDFL command surface,
 local discovery experiments, Part I/II citations, schematic figures, and stricter
 claim discipline.
 
+Runtime software DOI: https://doi.org/10.5281/zenodo.20343160
+
 ## Active Spine
 
 1. `01_Axioms_State_Variables_and_Claim_Boundaries.tex`
