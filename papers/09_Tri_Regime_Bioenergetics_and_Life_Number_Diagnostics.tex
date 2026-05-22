@@ -1,0 +1,145 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+
+\title{\textbf{CDFD Runtime Paper 09: Tri-Regime Bioenergetics and Life-Number Diagnostics}}
+\author{Steve Bico Mujjabi, MD\\
+\small Independent Researcher\\
+\small ORCID: \href{https://orcid.org/0009-0001-0556-5516}{0009-0001-0556-5516}}
+\date{May 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent \textbf{Executive synthesis.} This paper connects CDFD Runtime biology
+to the tri-regime Life Number $\Lambda$. The model tracks energy input,
+electron transport, proton coupling, stabilization load, relaxation time, and
+maintenance cost. The local OOL phase experiment supplies a candidate
+simulation boundary near $\Lambda=1$. The correct claim is not that the runtime
+has solved the origin of life. The correct claim is that it provides a
+reproducible way to test life-like throughput thresholds under explicit model
+assumptions.
+\end{abstract}
+
+\begin{figure}[ht]
+\centering
+\fbox{\begin{minipage}{0.92\textwidth}
+\centering
+\textbf{Runtime evidence path}\\[0.4em]
+Prior CDFD mathematics $\longrightarrow$ CDFL/runtime state $\longrightarrow$ bounded output $\longrightarrow$ falsification target.
+\end{minipage}}
+\caption{Conceptual schematic for the runtime papers. The engine translates the mathematical frame from the prior CDFD papers into executable CDFL/runtime diagnostics; candidate outputs remain tied to explicit tests before any stronger claim is made.}
+\end{figure}
+
+\section{Prior CDFD Basis}
+This manuscript does not rederive the mathematical core of CDFD. It uses the
+Mujjabi Adaptive Operating Ratio and the constrained-vacuum notation introduced
+in Part I \cite{MujjabiI2026}, the torus-knot hierarchy and boundary-mode work
+from the Part I sequence \cite{MujjabiVI2026,MujjabiIX2026}, the public balance
+law developed in the Part I capstone \cite{MujjabiX2026}, the Part I transport
+tests \cite{MujjabiXII2026}, and the Life Number and tri-regime biology bridge
+from Part II \cite{MujjabiPartII2026}. The runtime papers therefore act as an
+execution layer: they keep the mathematics connected to commands, outputs,
+falsification tests, and domain-specific limits.
+
+
+\section{Biology as Bounded Throughput}
+In this runtime, life-like behavior is modeled as persistent organized flow.
+The basic local operating ratio is still
+\begin{equation}
+    \Psi_s=\frac{\Phi}{C}S M_s.
+\end{equation}
+For origins-of-life questions, however, a system-wide viability number is also
+needed because local $\Psi_s$ can be high in one region and low elsewhere.
+
+\section{The Life Number}
+The Life Number is
+\begin{equation}
+    \Lambda =
+    \frac{\Phi \sigma_e \sigma_p \tau_{\mathrm{relax}}}
+    {S_{\mathrm{stab}}E_{\mathrm{maintenance}}},
+\end{equation}
+where $\Phi$ is energy input, $\sigma_e$ is electron-transport effectiveness,
+$\sigma_p$ is proton-coupling or coherence effectiveness,
+$\tau_{\mathrm{relax}}$ is relaxation time, $S_{\mathrm{stab}}$ is stabilization
+or dissipation burden, and $E_{\mathrm{maintenance}}$ is maintenance energy.
+
+The working labels are:
+\begin{itemize}
+    \item $\Lambda<1$: decay-dominated;
+    \item $\Lambda\approx1$: near-critical proto-biological window;
+    \item $\Lambda>1$: sustained throughput in the model.
+\end{itemize}
+
+\section{Runtime Implementation}
+The implementation lives in \texttt{engine/origins\_of\_life.py} and is called
+from \texttt{engine/biology.py}. The runtime stores channel summaries in
+\texttt{state.meta} keys such as \texttt{ool\_C\_input},
+\texttt{ool\_sigma\_e}, \texttt{ool\_sigma\_p},
+\texttt{ool\_S\_stability}, \texttt{life\_number}, and
+\texttt{throughput\_J}.
+
+\section{Experiment: OOL Phase Boundary}
+\texttt{experiments/notebooks/discovery\_ool\_phase.py} sweeps a 50 by 50
+parameter grid over energy input and geochemical constraint. The report
+\texttt{experiments/reports/NEW\_DISCOVERIES\_REPORT.md} describes candidate
+points near $\Lambda=1$, and
+\texttt{experiments/outputs/discovery\_ool\_phase\_results.h5} stores the output.
+
+The useful result is a model diagnostic: the runtime can locate and save a
+phase-boundary surface in the declared toy parameter space. The result still needs testing against laboratory chemistry, geochemical constraints, and independent
+origin-of-life models before any empirical claim is made.
+
+\section{Biology Discovery Scripts}
+The broader biology experiments include:
+\begin{itemize}
+    \item \texttt{experiments/run\_biology\_discovery.py}: metabolic saturation,
+    chronic drift, and tri-regime throughput;
+    \item \texttt{experiments/run\_bio\_mujjabi\_tests.py}: parasitic-drain and
+    cycling-retention tests;
+    \item \texttt{experiments/run\_drug\_synergy\_predictions.py}: same-axis
+    versus cross-axis intervention toy trajectories.
+\end{itemize}
+These are model diagnostics and hypothesis generators. They are not clinical
+advice or validated therapy rules.
+
+\section{Falsification Conditions}
+The tri-regime model fails or requires revision if:
+\begin{itemize}
+    \item measured prebiotic systems show no reproducible threshold near the
+    proposed $\Lambda$ proxy;
+    \item $\sigma_e$ or $\sigma_p$ cannot be measured or approximated in a
+    domain-specific way;
+    \item the boundary is indistinguishable from a simpler energy-only model;
+    \item outputs become non-finite under reasonable parameter stress.
+\end{itemize}
+
+\section{Conclusion}
+Tri-regime bioenergetics gives CDFD a bridge from local operating ratios to
+system-level viability. Its strength is not rhetorical certainty; its strength
+is that it produces explicit variables, runnable scripts, saved outputs, and
+failure conditions.
+\begin{thebibliography}{9}
+\bibitem{MujjabiI2026}
+Steve Bico Mujjabi, MD. \emph{Vortex Stability in a Constrained Transport Vacuum and the Origin of the Fine-Structure Constant}. CDFD Part I Paper I, preprint, 2026.
+
+\bibitem{MujjabiVI2026}
+Steve Bico Mujjabi, MD. \emph{The Universal Torus Knot Hierarchy: $Z_n$ Symmetry, the Cinquefoil Family, and the General Structure of CDFT Particle Families}. CDFD Part I Paper VI, preprint, 2026.
+
+\bibitem{MujjabiIX2026}
+Steve Bico Mujjabi, MD. \emph{Even-$n$ Torus Knots in CDFT: The Exclusion of $T(2,2)$, the Extension to $T(2,2m)$, and the Anti-Phase Mass Scaling Law}. CDFD Part I Paper IX, preprint, 2026.
+
+\bibitem{MujjabiX2026}
+Steve Bico Mujjabi, MD. \emph{The Vacuum Equation of State: Deriving Torus Knot Self-Consistency from the Public CDFD Balance Law $\Psi = \Phi/C$}. CDFD Part I Paper X, preprint, 2026.
+
+\bibitem{MujjabiXII2026}
+Steve Bico Mujjabi, MD. \emph{Friction, Superconductivity, Plasma States, and Transport Mysteries: Observable Tests of Adaptive Constraint}. CDFD Part I Paper XII, preprint, 2026.
+
+\bibitem{MujjabiPartII2026}
+Steve Bico Mujjabi, MD. \emph{CDFD Part II: Origins of Life and Tri-Regime Bioenergetics}. Public release archive, 2026, \url{https://doi.org/10.5281/zenodo.20250821}.
+\end{thebibliography}
+\end{document}

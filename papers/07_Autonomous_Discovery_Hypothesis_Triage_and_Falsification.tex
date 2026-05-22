@@ -1,0 +1,157 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+
+\title{\textbf{CDFD Runtime Paper 07: Autonomous Discovery, Hypothesis Triage, and Falsification}}
+\author{Steve Bico Mujjabi, MD\\
+\small Independent Researcher\\
+\small ORCID: \href{https://orcid.org/0009-0001-0556-5516}{0009-0001-0556-5516}}
+\date{May 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent \textbf{Executive synthesis.} The discovery layer is a hypothesis
+factory, not an oracle. It perturbs runtime states, extracts features, proposes
+candidate regimes, and records falsification targets. This paper aligns the
+discovery manuscripts with the actual local experiment surface in
+\texttt{cdfd\_runtime/experiments}: OOL phase mapping, finance-climate coupling,
+schema invention, vacuum hysteresis, knot stability, adaptive-surface
+instability, frontier sweeps, and gigamarathon coverage.
+\end{abstract}
+
+\begin{figure}[ht]
+\centering
+\fbox{\begin{minipage}{0.92\textwidth}
+\centering
+\textbf{Runtime evidence path}\\[0.4em]
+Prior CDFD mathematics $\longrightarrow$ CDFL/runtime state $\longrightarrow$ bounded output $\longrightarrow$ falsification target.
+\end{minipage}}
+\caption{Conceptual schematic for the runtime papers. The engine translates the mathematical frame from the prior CDFD papers into executable CDFL/runtime diagnostics; candidate outputs remain tied to explicit tests before any stronger claim is made.}
+\end{figure}
+
+\section{Prior CDFD Basis}
+This manuscript does not rederive the mathematical core of CDFD. It uses the
+Mujjabi Adaptive Operating Ratio and the constrained-vacuum notation introduced
+in Part I \cite{MujjabiI2026}, the torus-knot hierarchy and boundary-mode work
+from the Part I sequence \cite{MujjabiVI2026,MujjabiIX2026}, the public balance
+law developed in the Part I capstone \cite{MujjabiX2026}, the Part I transport
+tests \cite{MujjabiXII2026}, and the Life Number and tri-regime biology bridge
+from Part II \cite{MujjabiPartII2026}. The runtime papers therefore act as an
+execution layer: they keep the mathematics connected to commands, outputs,
+falsification tests, and domain-specific limits.
+
+
+\section{Discovery Discipline}
+Autonomous discovery is useful only when it remains falsifiable. The CDFD
+The Runtime discovery layer does not turn a pattern into a law merely because
+the engine generated it. A discovery candidate needs:
+\begin{itemize}
+    \item a script or CDFL model;
+    \item saved output;
+    \item parameter values;
+    \item a pattern label;
+    \item a falsification condition;
+    \item a rerun command.
+\end{itemize}
+
+\section{Discovery Modules}
+The discovery package contains feature extraction, hypothesis, generator,
+knowledge, sensitivity, detector, validator, and causal-discovery modules. The
+workflow is:
+\begin{enumerate}
+    \item generate or perturb a state;
+    \item run bounded dynamics;
+    \item extract features such as mean $\Psi_s$, variance, collapse count, and
+    stability index;
+    \item assign a candidate pattern label;
+    \item write a report or output file;
+    \item attempt falsification by changing parameters or null-coupling.
+\end{enumerate}
+
+\section{Selected Local Discoveries}
+\subsection{Discovery A: OOL phase boundary}
+\texttt{experiments/notebooks/discovery\_ool\_phase.py} sweeps a two-dimensional
+prebiotic parameter space. The selected output
+\texttt{experiments/outputs/discovery\_ool\_phase\_results.h5} contains grid
+points near $\Lambda=1$. This is useful as a cross-Part-II phase-boundary bridge
+and as a test target for the Life Number. It is not empirical proof of abiogenesis.
+
+\subsection{Discovery B: finance-climate coupling}
+\texttt{experiments/notebooks/discovery\_finance\_climate.py} models a coupled
+finance-climate toy system and then runs causal discovery over the time series.
+The report frames the edge from financial $\Psi$ volatility to climate
+constraint as a candidate causal result. The necessary null test is explicit:
+set coupling to zero and verify that the edge disappears.
+
+\subsection{Discovery C: schema invention}
+The schema-invention demonstration tests whether the knowledge layer can assign
+a new candidate label to a high-$\Psi_s$ anomaly. The narrow result is software
+capability: novelty detection and candidate schema recording. It is not, by
+itself, proof of a new physical regime.
+
+\subsection{Discovery D: vacuum hysteresis}
+\texttt{experiments/notebooks/discovery\_vacuum\_hysteresis.py} tests whether a
+high-flux pulse leaves localized $M_s$ memory. The selected output records a
+center $M_s$ peak of 15.5843. The proper status is candidate simulation result
+and measurement-protocol proposal.
+
+\subsection{Discovery E: n=7 knot stability}
+\texttt{experiments/notebooks/discovery\_knot\_symmetry.py} embeds a T(2,7)
+constraint pattern and tracks a stability index toward the CODATA 2022
+$\chi^*=137.035999177$ target. The release-selection note says to use it as a
+weak higher-knot self-stabilization stress test, not a proof.
+
+\subsection{Discovery F: adaptive-surface instability}
+\texttt{experiments/notebooks/discovery\_adaptive\_surface.py} produces an
+overloaded run. Because $\Psi_s$ grows from approximately 5.15 to approximately
+979 in the selected output, this is presented as an instability boundary
+and a safety test, not as an application success.
+
+\section{Frontier and Gigamarathon Sweeps}
+\texttt{experiments/outputs/frontier\_sweep.h5} summarizes 2,500 parameter
+points and 2,487 non-trivial candidate records. This is hypothesis triage:
+which regions deserve closer study. \texttt{gigamarathon\_1000\_results.h5}
+covers 10 domains by 100 points each. This is coverage evidence for the
+discovery engine, not physical validation.
+
+\section{Promotion Ladder}
+A candidate discovery moves through this ladder:
+\begin{enumerate}
+    \item simulation anomaly;
+    \item reproducible runtime diagnostic;
+    \item parameter-sensitivity report;
+    \item falsification attempt;
+    \item independent dataset or physical experiment;
+    \item domain-specific validation.
+\end{enumerate}
+
+\section{Conclusion}
+The discovery layer is valuable because it can search wider than a human can
+manually search. Its danger is overstatement. The runtime papers present
+discoveries as candidate simulation results with falsification handles until
+external validation exists.
+\begin{thebibliography}{9}
+\bibitem{MujjabiI2026}
+Steve Bico Mujjabi, MD. \emph{Vortex Stability in a Constrained Transport Vacuum and the Origin of the Fine-Structure Constant}. CDFD Part I Paper I, preprint, 2026.
+
+\bibitem{MujjabiVI2026}
+Steve Bico Mujjabi, MD. \emph{The Universal Torus Knot Hierarchy: $Z_n$ Symmetry, the Cinquefoil Family, and the General Structure of CDFT Particle Families}. CDFD Part I Paper VI, preprint, 2026.
+
+\bibitem{MujjabiIX2026}
+Steve Bico Mujjabi, MD. \emph{Even-$n$ Torus Knots in CDFT: The Exclusion of $T(2,2)$, the Extension to $T(2,2m)$, and the Anti-Phase Mass Scaling Law}. CDFD Part I Paper IX, preprint, 2026.
+
+\bibitem{MujjabiX2026}
+Steve Bico Mujjabi, MD. \emph{The Vacuum Equation of State: Deriving Torus Knot Self-Consistency from the Public CDFD Balance Law $\Psi = \Phi/C$}. CDFD Part I Paper X, preprint, 2026.
+
+\bibitem{MujjabiXII2026}
+Steve Bico Mujjabi, MD. \emph{Friction, Superconductivity, Plasma States, and Transport Mysteries: Observable Tests of Adaptive Constraint}. CDFD Part I Paper XII, preprint, 2026.
+
+\bibitem{MujjabiPartII2026}
+Steve Bico Mujjabi, MD. \emph{CDFD Part II: Origins of Life and Tri-Regime Bioenergetics}. Public release archive, 2026, \url{https://doi.org/10.5281/zenodo.20250821}.
+\end{thebibliography}
+\end{document}

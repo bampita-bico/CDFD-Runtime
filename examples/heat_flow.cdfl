@@ -1,0 +1,21 @@
+SET domain: physics
+
+SYSTEM HeatChannel {
+  flux: 1.2
+  constraint: 0.9
+  state: psi
+}
+
+RULE HeatOverload {
+  IF psi > 1.1
+  ACTION reduce_flux
+}
+
+RUN Engine {
+  duration: 0.05
+  dt: 0.01
+}
+
+OBSERVE {
+  metrics: [psi]
+}

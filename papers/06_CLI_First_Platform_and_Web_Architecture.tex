@@ -1,0 +1,158 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+
+\title{\textbf{CDFD Runtime Paper 06: CLI-First Platform and Future Web Architecture}}
+\author{Steve Bico Mujjabi, MD\\
+\small Independent Researcher\\
+\small ORCID: \href{https://orcid.org/0009-0001-0556-5516}{0009-0001-0556-5516}}
+\date{May 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent \textbf{Executive synthesis.} The platform direction is CLI first,
+web app second. The CLI is for serious engine work: reproducible simulations,
+paper diagnostics, debugging, automation, and saved results. The future web app
+is a visual layer over the same backend, not a separate physics system.
+This paper defines that boundary and explains how experiment outputs flow into future visual interfaces.
+\end{abstract}
+
+\begin{figure}[ht]
+\centering
+\fbox{\begin{minipage}{0.92\textwidth}
+\centering
+\textbf{Runtime evidence path}\\[0.4em]
+Prior CDFD mathematics $\longrightarrow$ CDFL/runtime state $\longrightarrow$ bounded output $\longrightarrow$ falsification target.
+\end{minipage}}
+\caption{Conceptual schematic for the runtime papers. The engine translates the mathematical frame from the prior CDFD papers into executable CDFL/runtime diagnostics; candidate outputs remain tied to explicit tests before any stronger claim is made.}
+\end{figure}
+
+\section{Prior CDFD Basis}
+This manuscript does not rederive the mathematical core of CDFD. It uses the
+Mujjabi Adaptive Operating Ratio and the constrained-vacuum notation introduced
+in Part I \cite{MujjabiI2026}, the torus-knot hierarchy and boundary-mode work
+from the Part I sequence \cite{MujjabiVI2026,MujjabiIX2026}, the public balance
+law developed in the Part I capstone \cite{MujjabiX2026}, the Part I transport
+tests \cite{MujjabiXII2026}, and the Life Number and tri-regime biology bridge
+from Part II \cite{MujjabiPartII2026}. The runtime papers therefore act as an
+execution layer: they keep the mathematics connected to commands, outputs,
+falsification tests, and domain-specific limits.
+
+
+\section{Ordering Principle}
+The platform order is:
+\begin{enumerate}
+    \item core engine;
+    \item CLI;
+    \item API server;
+    \item web app.
+\end{enumerate}
+The current repository now has the first two surfaces in active form. The web
+app under \texttt{webapp/} remains useful, but it calls the shared runtime
+backend rather than duplicate logic.
+
+\section{CLI Responsibilities}
+The CLI supports:
+\begin{itemize}
+    \item listing registered domains;
+    \item running domain demos;
+    \item validating CDFL models;
+    \item executing CDFL models;
+    \item exporting JSON result envelopes;
+    \item preserving finite-value and provenance metadata.
+\end{itemize}
+This is the credibility layer. It gives papers exact commands instead of vague
+claims that "the engine was run."
+
+\section{Future CDFD Studio}
+The future web interface is CDFD Studio: a visual environment for model
+building, simulation running, graph viewing, field visualization, coherence and
+dissipation monitoring, result browsing, and export.
+
+The first public demos are non-medical and visual:
+\begin{itemize}
+    \item heat diffusion and thermal flow;
+    \item traffic or infrastructure routing;
+    \item resource-flow networks;
+    \item predator-prey/ecology models;
+    \item photonic or adaptive-surface demos.
+\end{itemize}
+Medical applications require stricter validation, privacy, and user-safety
+boundaries and are not the first public web surface.
+
+\section{API Boundary}
+The API exposes command-like operations:
+\begin{itemize}
+    \item validate a CDFL model;
+    \item run a CDFL model;
+    \item retrieve saved result envelopes;
+    \item inspect finite audits;
+    \item list experiments and selected outputs;
+    \item export reports.
+\end{itemize}
+Each endpoint calls \texttt{runtime/runner.py} or a later service wrapper
+around it.
+
+\section{API Keys and the AI Boundary}
+Application keys belong at the application boundary, not inside the physics
+kernel. The runtime can check whether a calling app presents an approved key,
+record that key as a redacted fingerprint in provenance, and then run CDFL or
+domain commands. It does not call an LLM, store LLM credentials, or generate
+application-facing responses. That layer belongs in CDFD Studio, clinical apps,
+research notebooks, or other governed products built above the engine.
+
+This split keeps the engine clean: \texttt{cdfd.py} and
+\texttt{runtime/runner.py} own deterministic execution, finite audits, and
+result envelopes; applications own authentication, user identity, LLM routing,
+rate limits, privacy, and workflow policy.
+
+\section{Vacuum OS}
+Vacuum OS (VOS) is the proposed operating system layer above CDFD Runtime. VOS
+is not a second engine. It is the orchestration shell for projects that need
+apps, CDFL packages, user spaces, experiment queues, provenance stores, and
+controlled AI assistance. In this architecture, CDFD Runtime remains the
+mathematical kernel; VOS becomes the operating environment that launches models,
+manages keys, schedules runs, stores outputs, and connects approved applications
+to the same CDFD command backend.
+
+\section{Experiment Visualization}
+The experiment outputs already define future panels:
+\begin{itemize}
+    \item vacuum hysteresis: $M_s$ residual heatmap and recovery curve;
+    \item knot stability: stability-index trace toward the $\chi^*$ attractor;
+    \item OOL phase: $\Lambda=1$ phase boundary;
+    \item frontier sweep: pattern distribution and candidate triage table;
+    \item gigamarathon sweep: domain coverage dashboard.
+\end{itemize}
+The web app presents these as model diagnostics and falsification targets,
+not as empirical proof.
+
+\section{Conclusion}
+The platform makes one thing unmistakable: CDFD is executable. The CLI
+establishes that discipline. The web app later makes the same discipline
+visible, interactive, and understandable without weakening the runtime boundary.
+\begin{thebibliography}{9}
+\bibitem{MujjabiI2026}
+Steve Bico Mujjabi, MD. \emph{Vortex Stability in a Constrained Transport Vacuum and the Origin of the Fine-Structure Constant}. CDFD Part I Paper I, preprint, 2026.
+
+\bibitem{MujjabiVI2026}
+Steve Bico Mujjabi, MD. \emph{The Universal Torus Knot Hierarchy: $Z_n$ Symmetry, the Cinquefoil Family, and the General Structure of CDFT Particle Families}. CDFD Part I Paper VI, preprint, 2026.
+
+\bibitem{MujjabiIX2026}
+Steve Bico Mujjabi, MD. \emph{Even-$n$ Torus Knots in CDFT: The Exclusion of $T(2,2)$, the Extension to $T(2,2m)$, and the Anti-Phase Mass Scaling Law}. CDFD Part I Paper IX, preprint, 2026.
+
+\bibitem{MujjabiX2026}
+Steve Bico Mujjabi, MD. \emph{The Vacuum Equation of State: Deriving Torus Knot Self-Consistency from the Public CDFD Balance Law $\Psi = \Phi/C$}. CDFD Part I Paper X, preprint, 2026.
+
+\bibitem{MujjabiXII2026}
+Steve Bico Mujjabi, MD. \emph{Friction, Superconductivity, Plasma States, and Transport Mysteries: Observable Tests of Adaptive Constraint}. CDFD Part I Paper XII, preprint, 2026.
+
+\bibitem{MujjabiPartII2026}
+Steve Bico Mujjabi, MD. \emph{CDFD Part II: Origins of Life and Tri-Regime Bioenergetics}. Public release archive, 2026, \url{https://doi.org/10.5281/zenodo.20250821}.
+\end{thebibliography}
+\end{document}
