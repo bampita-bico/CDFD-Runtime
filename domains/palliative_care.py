@@ -11,7 +11,7 @@ class PalliativeCareAdapter(DomainAdapter):
         return phi, C
     def interpret(self, state):
         psi = state.mean_psi()
-        if psi < 0.3:  return "Severe palliative crisis — uncontrolled symptoms and suffering"
-        if psi < 0.6:  return "Inadequate symptom control — quality of life significantly impaired"
-        if psi <= 1.2: return "Palliative care effective — comfort and dignity maintained"
-        return "Excellent palliative care — minimal suffering, supported death with dignity"
+        if psi < 0.3:  return "Severe palliative-crisis signal"
+        if psi < 0.6:  return "Inadequate symptom-control signal"
+        if psi <= 1.2: return "Palliative-care stability band"
+        return "High palliative-comfort model band"

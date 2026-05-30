@@ -4,6 +4,7 @@
 \usepackage{hyperref}
 \usepackage{geometry}
 \geometry{margin=2.5cm}
+\emergencystretch=3em
 
 \title{\textbf{CDFD Runtime Paper 06: CLI-First Platform and Future Web Architecture}}
 \author{Steve Bico Mujjabi, MD\\
@@ -17,10 +18,15 @@
 \begin{abstract}
 \noindent \textbf{Executive synthesis.} The platform direction is CLI first,
 web app second. The CLI is for serious engine work: reproducible simulations,
-paper diagnostics, debugging, automation, and saved results. The future web app
-is a visual layer over the same backend, not a separate physics system.
-This paper defines that boundary and explains how experiment outputs flow into future visual interfaces.
+paper diagnostics, debugging, automation, and saved results. An optional web
+studio (\texttt{webapp/}) is a visual layer over the same backend, not a separate
+physics system. This paper defines that boundary and explains how CLI outputs
+flow into optional visual interfaces.
 \end{abstract}
+
+\paragraph{Greek-symbol convention.}
+Unless a manuscript states a tighter equation-local meaning, Greek symbols are local CDFD variables or coefficients, not universal constants. Here $\Phi$ denotes driving flux, $\Psi_s$ denotes the adaptive operating ratio, $\Omega$ denotes a domain or state space, and $\Lambda$ denotes the Life Number where used. The coefficients $\alpha$, $\beta$, and $\gamma$ denote accumulation or reinforcement, relaxation or decay, and diffusion, coupling, or redistribution. The symbols $\delta$ and $\epsilon$ denote perturbation or tolerance scales, while $\eta$, $\lambda$, $\mu$, $\nu$, $\rho$, $\sigma$, $\tau$, and $\phi$ denote local efficiency, rate, baseline, frequency, density or correlation, noise or variance, time-scale, and phase or field terms. Subscripts restrict any coefficient to the named pathway, tissue, domain, or experiment.
+
 
 \begin{figure}[ht]
 \centering
@@ -52,29 +58,34 @@ The platform order is:
     \item API server;
     \item web app.
 \end{enumerate}
-The current repository now has the first two surfaces in active form. The web
-app under \texttt{webapp/} remains useful, but it calls the shared runtime
-backend rather than duplicate logic.
+The current repository has the engine and CLI as primary surfaces. The initial
+web studio under \texttt{webapp/} (CDFD Runtime Studio, Streamlit) is optional:
+it is a visual layer over the same kernel, \texttt{runtime/diagnostics.py}, and
+domain adapters and does not duplicate physics logic.
 
 \section{CLI Responsibilities}
 The CLI supports:
 \begin{itemize}
-    \item listing registered domains;
-    \item running domain demos;
-    \item validating CDFL models;
-    \item executing CDFL models;
+    \item listing registered domains (\texttt{cdfd.py domains});
+    \item Part II diagnostics export (\texttt{cdfd.py diagnostics});
+    \item running domain demos with JSON payloads or OOL source scenarios;
+    \item validating and executing CDFL models;
     \item exporting JSON result envelopes;
-    \item preserving finite-value and provenance metadata.
+    \item app-key boundary checks (\texttt{cdfd.py auth});
+    \item preserving finite-value and provenance metadata on every command.
 \end{itemize}
 This is the credibility layer. It gives papers exact commands instead of vague
 claims that "the engine was run."
 
-\section{Future CDFD Studio}
-The future web interface is CDFD Studio: a visual environment for model
-building, simulation running, graph viewing, field visualization, coherence and
-dissipation monitoring, result browsing, and export.
+\section{CDFD Runtime Studio}
+The public Streamlit studio (\texttt{python -m webapp.run\_server}) already
+provides an initial visual environment: regime-banded trajectories, field
+heatmaps, Part II source-mix panels, a Life Number calculator, Granger-style
+causal graphs from run history, and the \texttt{origins\_of\_life} domain explorer.
+Future CDFD Studio releases may add model building, coherence monitoring, and
+deeper result browsing on top of the same CLI backend.
 
-The first public demos are non-medical and visual:
+The first public demos remain non-medical and visual:
 \begin{itemize}
     \item heat diffusion and thermal flow;
     \item traffic or infrastructure routing;
@@ -103,7 +114,7 @@ Application keys belong at the application boundary, not inside the physics
 kernel. The runtime can check whether a calling app presents an approved key,
 record that key as a redacted fingerprint in provenance, and then run CDFL or
 domain commands. It does not call an LLM, store LLM credentials, or generate
-application-facing responses. That layer belongs in CDFD Studio, clinical apps,
+application-facing responses. That layer belongs in CDFD Studio, regulated apps,
 research notebooks, or other governed products built above the engine.
 
 This split keeps the engine clean: \texttt{cdfd.py} and
@@ -129,13 +140,18 @@ The experiment outputs already define future panels:
     \item frontier sweep: pattern distribution and candidate triage table;
     \item gigamarathon sweep: domain coverage dashboard.
 \end{itemize}
-The web app presents these as model diagnostics and falsification targets,
-not as empirical proof.
+The public Streamlit dashboard under \texttt{webapp/dashboard.py} already
+implements an initial subset: regime-banded $\Psi_s$ trajectories, $\Phi$ and
+$C$ field heatmaps, Part II aromatic source-mix bars, a Life Number calculator,
+Granger-style causal edges from run history, and the \texttt{origins\_of\_life}
+domain explorer. The web app presents these as model diagnostics and
+falsification targets, not as empirical proof.
 
 \section{Conclusion}
 The platform makes one thing unmistakable: CDFD is executable. The CLI
-establishes that discipline. The web app later makes the same discipline
-visible, interactive, and understandable without weakening the runtime boundary.
+establishes that discipline. The optional web studio makes the same discipline
+visible without weakening the runtime boundary or replacing command-line
+reproducibility.
 \begin{thebibliography}{9}
 \bibitem{MujjabiI2026}
 Steve Bico Mujjabi, MD. \emph{Vortex Stability in a Constrained Transport Vacuum and the Origin of the Fine-Structure Constant}. CDFD Part I Paper I, preprint, 2026.
@@ -153,6 +169,6 @@ Steve Bico Mujjabi, MD. \emph{The Vacuum Equation of State: Deriving Torus Knot 
 Steve Bico Mujjabi, MD. \emph{Friction, Superconductivity, Plasma States, and Transport Mysteries: Observable Tests of Adaptive Constraint}. CDFD Part I Paper XII, preprint, 2026.
 
 \bibitem{MujjabiPartII2026}
-Steve Bico Mujjabi, MD. \emph{CDFD Part II: Origins of Life and Tri-Regime Bioenergetics}. Public release archive, 2026, \url{https://doi.org/10.5281/zenodo.20250821}.
+Steve Bico Mujjabi, MD. \emph{CDFD Part II: Origins of Life and Tri-Regime Bioenergetics}. Public release archive, 2026, \url{https://doi.org/10.5281/zenodo.20264779}.
 \end{thebibliography}
 \end{document}

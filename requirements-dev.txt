@@ -1,0 +1,7 @@
+-r requirements-web.txt
+-r requirements-experiments.txt
+build>=1.2
+pytest>=8.0
+ruff>=0.5
+twine>=5.0
+wheel>=0.43

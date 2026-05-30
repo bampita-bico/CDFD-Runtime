@@ -13,6 +13,6 @@ class CivilEngineeringAdapter(DomainAdapter):
     def interpret(self, state):
         psi = state.mean_psi()
         if psi < 0.3:  return "Structural failure risk — critical degradation or overload"
-        if psi < 0.6:  return "Below safety margins — rehabilitation urgently needed"
+        if psi < 0.6:  return "Below safety margins - structural-renewal flag"
         if psi <= 1.2: return "Structure within safe operational limits"
         return "Over-engineered — large safety margin, excellent longevity"

@@ -12,7 +12,7 @@ class UrologyAdapter(DomainAdapter):
 
     def interpret(self, state):
         psi = state.mean_psi()
-        if psi < 0.3:  return "Urological failure — obstruction or infection critical"
-        if psi < 0.6:  return "Urological dysfunction — flow impaired, treatment needed"
+        if psi < 0.3:  return "Urological-failure signal - obstruction/infection band"
+        if psi < 0.6:  return "Urological-dysfunction signal - impaired-flow band"
         if psi <= 1.2: return "Normal urological function"
         return "High flow state — monitor for overactive bladder or polyuria"

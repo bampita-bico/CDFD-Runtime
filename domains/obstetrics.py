@@ -12,8 +12,8 @@ class ObstetricsAdapter(DomainAdapter):
 
     def interpret(self, state):
         psi = state.mean_psi()
-        if psi < 0.3:  return "Maternal-foetal emergency — immediate obstetric intervention"
-        if psi < 0.6:  return "Pre-eclampsia/foetal distress — hospitalise and monitor"
-        if psi < 0.8:  return "High-risk pregnancy — close antenatal surveillance"
+        if psi < 0.3:  return "Maternal-foetal emergency signal"
+        if psi < 0.6:  return "Pre-eclampsia/foetal-distress signal"
+        if psi < 0.8:  return "High-risk pregnancy band"
         if psi <= 1.2: return "Normal pregnancy progression"
-        return "Hyperactive uterine/foetal state — rule out precipitate labour"
+        return "Hyperactive uterine/foetal-state signal"

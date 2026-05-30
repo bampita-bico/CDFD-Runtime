@@ -12,8 +12,8 @@ class GastroenterologyAdapter(DomainAdapter):
 
     def interpret(self, state):
         psi = state.mean_psi()
-        if psi < 0.3:  return "Severe intestinal failure — parenteral nutrition"
-        if psi < 0.6:  return "Active IBD/malabsorption — escalate therapy"
-        if psi < 0.8:  return "Partial remission — optimise maintenance"
+        if psi < 0.3:  return "Severe intestinal-failure signal"
+        if psi < 0.6:  return "Active IBD/malabsorption signal"
+        if psi < 0.8:  return "Partial-remission model band"
         if psi <= 1.2: return "GI equilibrium"
         return "Functional GI disorder — motility dysregulation"

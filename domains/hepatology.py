@@ -12,8 +12,8 @@ class HepatologyAdapter(DomainAdapter):
 
     def interpret(self, state):
         psi = state.mean_psi()
-        if psi < 0.3:  return "Acute liver failure — transplant evaluation urgent"
-        if psi < 0.6:  return "Decompensated cirrhosis — intensive hepatic support"
-        if psi < 0.8:  return "Compensated liver disease — monitor closely"
+        if psi < 0.3:  return "Acute liver-failure signal"
+        if psi < 0.6:  return "Decompensated-cirrhosis signal"
+        if psi < 0.8:  return "Compensated liver-disease band"
         if psi <= 1.2: return "Hepatic function maintained"
         return "Hepatic hypermetabolism — monitor for toxicity"

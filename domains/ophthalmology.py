@@ -12,8 +12,8 @@ class OphthalmologyAdapter(DomainAdapter):
 
     def interpret(self, state):
         psi = state.mean_psi()
-        if psi < 0.3:  return "Severe visual loss — urgent ophthalmological intervention"
-        if psi < 0.6:  return "Significant visual impairment — active treatment required"
-        if psi < 0.8:  return "Mild visual dysfunction — close monitoring"
+        if psi < 0.3:  return "Severe visual-loss signal"
+        if psi < 0.6:  return "Significant visual-impairment signal"
+        if psi < 0.8:  return "Mild visual-dysfunction band"
         if psi <= 1.2: return "Visual function preserved"
         return "Ocular hypertension — glaucoma surveillance"

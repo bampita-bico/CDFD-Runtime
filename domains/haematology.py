@@ -12,8 +12,8 @@ class HaematologyAdapter(DomainAdapter):
 
     def interpret(self, state):
         psi = state.mean_psi()
-        if psi < 0.3:  return "Haematological crisis — transfusion and bone marrow support"
-        if psi < 0.6:  return "Severe cytopaenia — investigate bone marrow pathology"
-        if psi < 0.8:  return "Mild haematological impairment — targeted replacement"
+        if psi < 0.3:  return "Haematological-crisis signal"
+        if psi < 0.6:  return "Severe cytopaenia signal"
+        if psi < 0.8:  return "Mild haematological-impairment band"
         if psi <= 1.2: return "Haematological equilibrium"
-        return "Hyperviscosity/thrombotic risk — consider cytoreduction"
+        return "Hyperviscosity/thrombotic-risk signal"

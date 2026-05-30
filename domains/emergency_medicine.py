@@ -14,9 +14,9 @@ class EmergencyMedicineAdapter(DomainAdapter):
 
     def interpret(self, state):
         psi = state.mean_psi()
-        if psi < 0.2:  return "Cardiac arrest / imminent death — resuscitation"
-        if psi < 0.4:  return "Critical — immediate life-saving intervention"
-        if psi < 0.6:  return "Emergent — urgent assessment and treatment"
-        if psi < 0.8:  return "Urgent — timely evaluation needed"
-        if psi <= 1.2: return "Stable — standard emergency assessment"
-        return "Minor — low acuity presentation"
+        if psi < 0.2:  return "Extreme instability signal - critical-event band"
+        if psi < 0.4:  return "Critical instability signal - immediate-review flag"
+        if psi < 0.6:  return "Emergent instability signal - urgent-review flag"
+        if psi < 0.8:  return "Urgent instability signal - timely-review flag"
+        if psi <= 1.2: return "Stable emergency-medicine model band"
+        return "Low-acuity model band"

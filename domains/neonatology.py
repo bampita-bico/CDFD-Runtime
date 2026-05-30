@@ -11,7 +11,7 @@ class NeonatologyAdapter(DomainAdapter):
         return phi, C
     def interpret(self, state):
         psi = state.mean_psi()
-        if psi < 0.3:  return "Neonatal emergency — critical immaturity or severe compromise"
-        if psi < 0.6:  return "Premature — significant NICU support required"
+        if psi < 0.3:  return "Neonatal-emergency signal - critical immaturity/severe-compromise band"
+        if psi < 0.6:  return "Prematurity signal - high-support band"
         if psi <= 1.2: return "Neonatal transition normal — healthy adaptation"
-        return "Robust newborn — excellent transition, no complications expected"
+        return "Robust newborn transition band"

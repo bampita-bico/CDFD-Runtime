@@ -12,8 +12,8 @@ class SurgeryAdapter(DomainAdapter):
 
     def interpret(self, state):
         psi = state.mean_psi()
-        if psi < 0.3:  return "Post-operative crisis — return to theatre likely"
-        if psi < 0.6:  return "Complicated post-op — aggressive wound and infection management"
-        if psi < 0.8:  return "Healing but slow — optimise nutrition and infection control"
+        if psi < 0.3:  return "Post-operative crisis signal"
+        if psi < 0.6:  return "Complicated post-operative signal"
+        if psi < 0.8:  return "Slow-healing model band"
         if psi <= 1.2: return "Normal post-operative recovery"
-        return "Rapid healing — discharge planning can proceed"
+        return "Rapid-healing model band"

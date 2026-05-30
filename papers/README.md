@@ -50,14 +50,30 @@ The active papers use `Steve Bico Mujjabi, MD`, the Part I ORCID
 `0009-0001-0556-5516`, and month-year dates. Each paper includes a compact
 schematic and prior-work references.
 
+## Sync with the codebase
+
+See `RUNTIME_PAPER_SYNC.md` for the May 2026 alignment checklist (CLI commands,
+Part II diagnostics, domain count, tests, optional web studio).
+
 ## Build
 
-Compile to a temporary build directory from the runtime root:
+From the runtime root:
 
 ```bash
-mkdir -p /tmp/cdfd_runtime_papers_build
-for f in papers/[0-9][0-9]_*.tex; do
-  pdflatex -interaction=nonstopmode -halt-on-error \
-    -output-directory /tmp/cdfd_runtime_papers_build "$f"
-done
+bash papers/build_pdfs.sh
 ```
+
+PDFs are copied to `papers/PDFs/`. Requires `latexmk` and `pdflatex`.
+
+Regenerate Part II diagnostic JSON (CLI-first):
+
+```bash
+python cdfd.py diagnostics
+# or: python experiments/export_part_ii_diagnostics.py
+```
+
+The Part II sync includes the guarded Paper 7 aromatic source-mix rows, the
+Life Number supply guardrail, and the Paper 11 photochemical endpoint language
+that treats eumelanin as a mature exemplar rather than a primordial
+requirement. Runtime paper bibliography entries cite the Part II DOI
+`10.5281/zenodo.20264779`.

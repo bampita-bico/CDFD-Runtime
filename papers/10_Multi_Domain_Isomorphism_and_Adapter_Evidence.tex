@@ -4,6 +4,7 @@
 \usepackage{hyperref}
 \usepackage{geometry}
 \geometry{margin=2.5cm}
+\emergencystretch=3em
 
 \title{\textbf{CDFD Runtime Paper 10: Multi-Domain Isomorphism and Adapter Evidence}}
 \author{Steve Bico Mujjabi, MD\\
@@ -22,6 +23,10 @@ evidence of software breadth, not empirical proof that all domains obey CDFD.
 This paper explains the adapter contract and connects it to the finance-climate,
 universal-collapse, drug-synergy, and frontier-sweep experiments.
 \end{abstract}
+
+\paragraph{Greek-symbol convention.}
+Unless a manuscript states a tighter equation-local meaning, Greek symbols are local CDFD variables or coefficients, not universal constants. Here $\Phi$ denotes driving flux, $\Psi_s$ denotes the adaptive operating ratio, $\Omega$ denotes a domain or state space, and $\Lambda$ denotes the Life Number where used. The coefficients $\alpha$, $\beta$, and $\gamma$ denote accumulation or reinforcement, relaxation or decay, and diffusion, coupling, or redistribution. The symbols $\delta$ and $\epsilon$ denote perturbation or tolerance scales, while $\eta$, $\lambda$, $\mu$, $\nu$, $\rho$, $\sigma$, $\tau$, and $\phi$ denote local efficiency, rate, baseline, frequency, density or correlation, noise or variance, time-scale, and phase or field terms. Subscripts restrict any coefficient to the named pathway, tissue, domain, or experiment.
+
 
 \begin{figure}[ht]
 \centering
@@ -60,12 +65,14 @@ The command
 \begin{verbatim}
 python cdfd.py domains
 \end{verbatim}
-currently lists 196 registered domain keys. Domains include medicine,
-physics, origins of life, ecology, economics, climate, infrastructure,
+currently lists 196 registered domain keys (May 2026 inventory). Domains include
+medicine, physics, origins of life, ecology, economics, climate, infrastructure,
 materials science, software engineering, and many more.
 
 This breadth is useful for hypothesis generation. It does not replace
-domain-specific validation.
+domain-specific validation. The \texttt{origins\_of\_life} adapter exposes
+Part II aromatic source-mix diagnostics through
+\texttt{cdfd.py demo origins\_of\_life --source-scenario <name>}.
 
 \section{Case Study: Finance and Climate}
 \texttt{experiments/notebooks/discovery\_finance\_climate.py} models a coupled
@@ -84,7 +91,7 @@ networks, but each real domain still requires its own data mapping.
 
 \section{Case Study: Pharmacological Synergy}
 \texttt{experiments/run\_drug\_synergy\_predictions.py} compares same-axis
-interventions with cross-axis interventions. In CDFD terms, one drug lowering
+perturbations with cross-axis perturbations. In CDFD terms, one drug lowering
 $\Phi$ and another improving recovery or relaxation may behave differently from
 two drugs both lowering $\Phi$. This is a toy pharmacology diagnostic, not a
 prescribing rule.
@@ -125,6 +132,6 @@ Steve Bico Mujjabi, MD. \emph{The Vacuum Equation of State: Deriving Torus Knot 
 Steve Bico Mujjabi, MD. \emph{Friction, Superconductivity, Plasma States, and Transport Mysteries: Observable Tests of Adaptive Constraint}. CDFD Part I Paper XII, preprint, 2026.
 
 \bibitem{MujjabiPartII2026}
-Steve Bico Mujjabi, MD. \emph{CDFD Part II: Origins of Life and Tri-Regime Bioenergetics}. Public release archive, 2026, \url{https://doi.org/10.5281/zenodo.20250821}.
+Steve Bico Mujjabi, MD. \emph{CDFD Part II: Origins of Life and Tri-Regime Bioenergetics}. Public release archive, 2026, \url{https://doi.org/10.5281/zenodo.20264779}.
 \end{thebibliography}
 \end{document}

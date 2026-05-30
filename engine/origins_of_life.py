@@ -12,7 +12,8 @@ Notation bridge for Life Number components (C replaces legacy Lambda):
   chlorophyll-like  → C_input     (energy input proxy)
   magnetite-like    → σ_e         (electron transport; inverse effective constraint)
   water-like        → σ_p         (proton coherence / spatial coherence of Φ)
-  melanin-like      → S_stability (dissipation + buffering; disorder + mean Λ proxy)
+  melanin-like      → S_stability (dissipation + buffering; mature endpoint exemplar,
+                                    not an origin requirement)
 
 Unified throughput: J = |Φ| · (σ_e · σ_p) / S  (grid-level with coherent σ_p scaling).
 

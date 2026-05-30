@@ -13,6 +13,6 @@ class RoboticsAdapter(DomainAdapter):
     def interpret(self, state):
         psi = state.mean_psi()
         if psi < 0.3:  return "Robot failure — sensors or actuators unable to handle task"
-        if psi < 0.6:  return "Limited autonomy — frequent human intervention required"
+        if psi < 0.6:  return "Limited autonomy - frequent human-oversight flag"
         if psi <= 1.2: return "Functional robot — completing assigned tasks reliably"
         return "High-performance autonomous system — exceeding task demands"

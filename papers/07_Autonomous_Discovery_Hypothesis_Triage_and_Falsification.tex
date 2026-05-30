@@ -4,6 +4,7 @@
 \usepackage{hyperref}
 \usepackage{geometry}
 \geometry{margin=2.5cm}
+\emergencystretch=3em
 
 \title{\textbf{CDFD Runtime Paper 07: Autonomous Discovery, Hypothesis Triage, and Falsification}}
 \author{Steve Bico Mujjabi, MD\\
@@ -23,6 +24,10 @@ discovery manuscripts with the actual local experiment surface in
 schema invention, vacuum hysteresis, knot stability, adaptive-surface
 instability, frontier sweeps, and gigamarathon coverage.
 \end{abstract}
+
+\paragraph{Greek-symbol convention.}
+Unless a manuscript states a tighter equation-local meaning, Greek symbols are local CDFD variables or coefficients, not universal constants. Here $\Phi$ denotes driving flux, $\Psi_s$ denotes the adaptive operating ratio, $\Omega$ denotes a domain or state space, and $\Lambda$ denotes the Life Number where used. The coefficients $\alpha$, $\beta$, and $\gamma$ denote accumulation or reinforcement, relaxation or decay, and diffusion, coupling, or redistribution. The symbols $\delta$ and $\epsilon$ denote perturbation or tolerance scales, while $\eta$, $\lambda$, $\mu$, $\nu$, $\rho$, $\sigma$, $\tau$, and $\phi$ denote local efficiency, rate, baseline, frequency, density or correlation, noise or variance, time-scale, and phase or field terms. Subscripts restrict any coefficient to the named pathway, tissue, domain, or experiment.
+
 
 \begin{figure}[ht]
 \centering
@@ -76,10 +81,9 @@ workflow is:
 \section{Selected Local Discoveries}
 \subsection{Discovery A: OOL phase boundary}
 \texttt{experiments/notebooks/discovery\_ool\_phase.py} sweeps a two-dimensional
-prebiotic parameter space. The selected output
-\texttt{experiments/outputs/discovery\_ool\_phase\_results.h5} contains grid
-points near $\Lambda=1$. This is useful as a cross-Part-II phase-boundary bridge
-and as a test target for the Life Number. It is not empirical proof of abiogenesis.
+prebiotic parameter space. Its selected HDF5 output contains grid points near
+$\Lambda=1$. This is useful as a cross-Part-II phase-boundary bridge and as a
+test target for the Life Number. It is not empirical proof of abiogenesis.
 
 \subsection{Discovery B: finance-climate coupling}
 \texttt{experiments/notebooks/discovery\_finance\_climate.py} models a coupled
@@ -111,6 +115,13 @@ weak higher-knot self-stabilization stress test, not a proof.
 overloaded run. Because $\Psi_s$ grows from approximately 5.15 to approximately
 979 in the selected output, this is presented as an instability boundary
 and a safety test, not as an application success.
+
+\section{Causal Graph from Run History}
+\texttt{engine/causal\_graph.py} builds Granger-style directed edges from
+simulation time series without an LLM. The CLI and optional web studio can
+present these edges as triage hints: which series preceded which under the
+current model. A persistent edge after decoupling controls remains an artifact,
+not a discovery.
 
 \section{Frontier and Gigamarathon Sweeps}
 \texttt{experiments/outputs/frontier\_sweep.h5} summarizes 2,500 parameter
@@ -152,6 +163,6 @@ Steve Bico Mujjabi, MD. \emph{The Vacuum Equation of State: Deriving Torus Knot 
 Steve Bico Mujjabi, MD. \emph{Friction, Superconductivity, Plasma States, and Transport Mysteries: Observable Tests of Adaptive Constraint}. CDFD Part I Paper XII, preprint, 2026.
 
 \bibitem{MujjabiPartII2026}
-Steve Bico Mujjabi, MD. \emph{CDFD Part II: Origins of Life and Tri-Regime Bioenergetics}. Public release archive, 2026, \url{https://doi.org/10.5281/zenodo.20250821}.
+Steve Bico Mujjabi, MD. \emph{CDFD Part II: Origins of Life and Tri-Regime Bioenergetics}. Public release archive, 2026, \url{https://doi.org/10.5281/zenodo.20264779}.
 \end{thebibliography}
 \end{document}

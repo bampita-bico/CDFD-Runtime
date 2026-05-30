@@ -12,7 +12,7 @@ class LinguisticsAdapter(DomainAdapter):
 
     def interpret(self, state):
         psi = state.mean_psi()
-        if psi < 0.3:  return "Language critically endangered — documentation urgent"
-        if psi < 0.6:  return "Language under threat — revitalisation programmes needed"
+        if psi < 0.3:  return "Language critically endangered - documentation-risk flag"
+        if psi < 0.6:  return "Language under threat - revitalisation-risk flag"
         if psi <= 1.2: return "Language in healthy use"
         return "Dominant language — monitor for displacement of minority languages"

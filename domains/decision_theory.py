@@ -11,6 +11,6 @@ class DecisionTheoryAdapter(DomainAdapter):
     def interpret(self, state):
         psi = state.mean_psi()
         if psi < 0.3:  return "Decision paralysis — uncertainty and bias overwhelming choice"
-        if psi < 0.6:  return "Poor decisions likely — information gaps and biases dominant"
+        if psi < 0.6:  return "Poor-decision-risk signal - information gaps and biases dominant"
         if psi <= 1.2: return "Rational decision-making — adequate information and clarity"
         return "Optimal decisions — complete information, clear utilities, minimal bias"

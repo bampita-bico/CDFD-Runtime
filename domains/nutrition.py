@@ -14,8 +14,8 @@ class NutritionAdapter(DomainAdapter):
 
     def interpret(self, state):
         psi = state.mean_psi()
-        if psi < 0.3:  return "Severe malnutrition — therapeutic feeding required"
-        if psi < 0.6:  return "Moderate malnutrition — supplementary feeding"
-        if psi < 0.8:  return "At-risk nutritional status — dietary intervention"
+        if psi < 0.3:  return "Severe malnutrition signal - urgent review flag"
+        if psi < 0.6:  return "Moderate malnutrition signal - support-planning flag"
+        if psi < 0.8:  return "At-risk nutritional status - diet-quality review flag"
         if psi <= 1.2: return "Adequate nutritional status"
-        return "Overnutrition — dietary counselling recommended"
+        return "Overnutrition signal - diet-quality review flag"

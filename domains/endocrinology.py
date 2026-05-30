@@ -14,7 +14,7 @@ class EndocrinologyAdapter(DomainAdapter):
 
     def interpret(self, state):
         psi = state.mean_psi()
-        if psi < 0.4:  return "Endocrine crisis — immediate hormonal replacement needed"
-        if psi < 0.7:  return "Poor hormonal control — escalate management"
+        if psi < 0.4:  return "Endocrine-crisis signal"
+        if psi < 0.7:  return "Poor hormonal-control signal"
         if psi <= 1.2: return "Hormonal balance achieved"
         return "Hormonal excess — risk of end-organ damage"

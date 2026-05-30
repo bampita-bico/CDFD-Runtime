@@ -169,12 +169,12 @@ class Executor:
         C   = max(C, 1e-9)
         psi = phi / C
 
-        # get recommendation — domain-agnostic
+        # Get domain-neutral model guidance without depending on optional UI code.
         try:
-            from webapp.ontology import recommend
-            rec = recommend(psi, domain=ctx.get("domain", "generic"))
+            from runtime.decision import classify_operating_state
+            guidance = classify_operating_state(psi, domain=ctx.get("domain", "generic"))
         except Exception:
-            rec = {"state": "unknown", "actions": []}
+            guidance = {"state": "unknown", "actions": []}
 
 
         domain_key = self.domain if self.domain else "generic"
@@ -194,7 +194,7 @@ class Executor:
             "phi": phi,
             "C": C,
             "psi": psi,
-            "recommendation": rec,
+            "runtime_guidance": guidance,
             "semantic_regime": semantic_label,
         }
         ctx.setdefault("_systems", {})[node.name] = entry

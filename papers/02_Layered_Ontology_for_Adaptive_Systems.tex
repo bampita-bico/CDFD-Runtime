@@ -4,6 +4,7 @@
 \usepackage{hyperref}
 \usepackage{geometry}
 \geometry{margin=2.5cm}
+\emergencystretch=3em
 
 \title{\textbf{CDFD Runtime Paper 02: Layered Ontology for Adaptive Systems}}
 \author{Steve Bico Mujjabi, MD\\
@@ -23,6 +24,10 @@ meta-ontology, domain ontologies, application ontologies, and context-specific
 memory. It also explains how the discovery layer can propose new schemas, while
 keeping every new schema in candidate status until it survives validation.
 \end{abstract}
+
+\paragraph{Greek-symbol convention.}
+Unless a manuscript states a tighter equation-local meaning, Greek symbols are local CDFD variables or coefficients, not universal constants. Here $\Phi$ denotes driving flux, $\Psi_s$ denotes the adaptive operating ratio, $\Omega$ denotes a domain or state space, and $\Lambda$ denotes the Life Number where used. The coefficients $\alpha$, $\beta$, and $\gamma$ denote accumulation or reinforcement, relaxation or decay, and diffusion, coupling, or redistribution. The symbols $\delta$ and $\epsilon$ denote perturbation or tolerance scales, while $\eta$, $\lambda$, $\mu$, $\nu$, $\rho$, $\sigma$, $\tau$, and $\phi$ denote local efficiency, rate, baseline, frequency, density or correlation, noise or variance, time-scale, and phase or field terms. Subscripts restrict any coefficient to the named pathway, tissue, domain, or experiment.
+
 
 \begin{figure}[ht]
 \centering
@@ -60,8 +65,7 @@ relationships to CDFL, the CLI, and the future web interface.
 \subsection{Layer 0: Runtime Mechanics}
 The runtime layer is responsible for graph mechanics, state propagation,
 uncertainty flags, causal links, memory binding, regime tagging, and finite
-diagnostic summaries. It does not decide what a clinical or economic state
-means.
+diagnostic summaries. It does not decide what a domain-specific state means.
 
 \subsection{Layer 1: Core Meta-Ontology}
 The meta-ontology defines reusable categories:
@@ -140,6 +144,6 @@ Steve Bico Mujjabi, MD. \emph{The Vacuum Equation of State: Deriving Torus Knot 
 Steve Bico Mujjabi, MD. \emph{Friction, Superconductivity, Plasma States, and Transport Mysteries: Observable Tests of Adaptive Constraint}. CDFD Part I Paper XII, preprint, 2026.
 
 \bibitem{MujjabiPartII2026}
-Steve Bico Mujjabi, MD. \emph{CDFD Part II: Origins of Life and Tri-Regime Bioenergetics}. Public release archive, 2026, \url{https://doi.org/10.5281/zenodo.20250821}.
+Steve Bico Mujjabi, MD. \emph{CDFD Part II: Origins of Life and Tri-Regime Bioenergetics}. Public release archive, 2026, \url{https://doi.org/10.5281/zenodo.20264779}.
 \end{thebibliography}
 \end{document}

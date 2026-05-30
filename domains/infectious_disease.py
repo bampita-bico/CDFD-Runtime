@@ -12,8 +12,8 @@ class InfectiousDiseaseAdapter(DomainAdapter):
 
     def interpret(self, state):
         psi = state.mean_psi()
-        if psi < 0.3:  return "Septic shock — critical antimicrobial and fluid resuscitation"
-        if psi < 0.6:  return "Sepsis — aggressive treatment, source control"
-        if psi < 0.8:  return "Active infection — targeted antimicrobial therapy"
-        if psi <= 1.2: return "Infection controlled — continue treatment course"
+        if psi < 0.3:  return "Septic-shock signal - critical-instability band"
+        if psi < 0.6:  return "Sepsis signal - high-pathogen-load band"
+        if psi < 0.8:  return "Active-infection signal"
+        if psi <= 1.2: return "Infection-control model band"
         return "Immune overactivation — monitor for cytokine storm"

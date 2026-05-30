@@ -11,6 +11,7 @@ from runtime.diagnostics import (
     result_envelope,
     state_summary,
 )
+from runtime.decision import classify_operating_state
 
 __all__ = [
     "Task",
@@ -24,4 +25,5 @@ __all__ = [
     "regime_label",
     "result_envelope",
     "state_summary",
+    "classify_operating_state",
 ]

@@ -12,7 +12,7 @@ class NeurosurgeryAdapter(DomainAdapter):
 
     def interpret(self, state):
         psi = state.mean_psi()
-        if psi < 0.3:  return "Neurosurgical emergency — herniation or perfusion failure"
-        if psi < 0.6:  return "Critical neurological compromise — urgent intervention needed"
+        if psi < 0.3:  return "Neurosurgical-emergency signal - herniation/perfusion-failure band"
+        if psi < 0.6:  return "Critical neurological-compromise signal"
         if psi <= 1.2: return "Neurological function preserved post-operatively"
         return "Excellent neurological recovery — full function maintained"

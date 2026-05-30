@@ -14,5 +14,5 @@ class EpidemiologyAdapter(DomainAdapter):
         psi = state.mean_psi()
         if psi < 0.5:  return "Epidemic controlled — Reff < 1, cases declining"
         if psi <= 1.0: return "Endemic equilibrium — sustained low-level transmission"
-        if psi <= 2.0: return "Active outbreak — intervention scale-up needed"
-        return "Epidemic surge — declare public health emergency"
+        if psi <= 2.0: return "Active-outbreak signal"
+        return "Epidemic-surge signal"

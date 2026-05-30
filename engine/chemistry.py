@@ -65,9 +65,10 @@ def _aromatic_stability_and_encoding(state, dt):
 
 def _melanin_buffering(state, dt):
     """
-    Paper 7 & 10 Upgrade: Melanin (Eumelanin) Energy Regulation.
-    Eumelanin acts as a broadband radiation shield and redox buffer.
-    It absorbs massive flux spikes and smooths out the energy landscape.
+    Paper 11 guardrail: eumelanin is a mature endpoint exemplar of surplus
+    stabilization, not an origin requirement. The runtime term stands for a
+    broad redox/radical-buffering function that prebiotic analogues may satisfy
+    with different chemistry.
     """
     safe_C = np.where(state.C > 1e-9, state.C, 1e-9)
     # Melanin provides an effective constraint barrier against overload

@@ -14,5 +14,5 @@ class DentistryAdapter(DomainAdapter):
         psi = state.mean_psi()
         if psi < 0.3:  return "Severe oral disease — tooth loss and systemic risk"
         if psi < 0.6:  return "Active dental disease — caries and periodontal disease"
-        if psi <= 1.2: return "Acceptable oral health — maintenance required"
+        if psi <= 1.2: return "Acceptable oral-health model band"
         return "Excellent oral health — optimal dental function"

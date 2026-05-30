@@ -1,7 +1,9 @@
 """Orchestrator — coordinates all modules, enforces error isolation, maintains temporal coherence."""
+import json
 import logging
 import time
-import json
+
+import numpy as np
 from engine.config import DEFAULT_DT, LOG_FAILURES
 from engine.physics import step as apply_physics, update_psi
 from ontology.engine import CDFLOntologyEngine
@@ -991,15 +993,21 @@ class Kernel:
         }
 
     def run(self, state, steps):
+        """Run `steps` cycles and return scalar time series for CLI and web visualization."""
         history = []
         for _ in range(steps):
             try:
                 result = self.run_cycle(state)
                 psi_s = result["equilibrium_psi_s"]
                 history.append({
-                    "t": state.t,
+                    "t": float(state.t),
                     "psi": psi_s,
                     "psi_s": psi_s,
+                    "phi": float(np.mean(state.phi)),
+                    "C": float(np.mean(state.C)),
+                    "S": float(np.mean(state.S)),
+                    "Ms": float(np.mean(state.Ms)),
+                    "regime": state.regime(),
                     "status": result["status"],
                 })
             except Exception:

@@ -12,7 +12,7 @@ class CybersecurityAdapter(DomainAdapter):
 
     def interpret(self, state):
         psi = state.mean_psi()
-        if psi < 0.3:  return "Breach likely — defences overwhelmed by threats"
+        if psi < 0.3:  return "Breach-risk signal - defences overwhelmed by threats"
         if psi < 0.6:  return "High risk — significant vulnerabilities unpatched"
         if psi <= 1.2: return "Security posture adequate — threats managed"
         return "Strong security — proactive defence exceeds threat landscape"

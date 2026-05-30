@@ -1,0 +1,56 @@
+{
+  "@context": "https://w3id.org/codemeta/3.0",
+  "@type": "SoftwareSourceCode",
+  "name": "CDFD Runtime: Constraint-Driven Flux Dynamics and CDFL Execution Engine",
+  "description": "Public command-line runtime for Constraint-Driven Flux Dynamics and CDFL. The release includes deterministic CLI execution, the CDFL parser and executor, runtime finite-audit helpers, domain adapters, ontology execution, curated public experiments, a 12-paper runtime spine, compiled PDFs, and tests. Outputs are model diagnostics and falsification targets, not empirical proof or deployed decision systems.",
+  "version": "1.0.1",
+  "identifier": "https://doi.org/10.5281/zenodo.20343160",
+  "codeRepository": "https://github.com/bampita-bico/CDFD-Runtime",
+  "license": "https://spdx.org/licenses/AGPL-3.0-or-later",
+  "datePublished": "2026-05-22",
+  "programmingLanguage": "Python",
+  "runtimePlatform": "Python >=3.10",
+  "applicationCategory": "Scientific/Engineering",
+  "developmentStatus": "active",
+  "author": {
+    "@type": "Person",
+    "givenName": "Steve Bico",
+    "familyName": "Mujjabi",
+    "honorificSuffix": "MD",
+    "affiliation": "Independent Researcher",
+    "identifier": "https://orcid.org/0009-0001-0556-5516"
+  },
+  "softwareRequirements": [
+    "numpy>=1.26",
+    "numba>=0.59",
+    "requests>=2.31",
+    "scipy>=1.11"
+  ],
+  "keywords": [
+    "CDFD",
+    "CDFL",
+    "CDFD Runtime",
+    "constraint-driven flux dynamics",
+    "executable model grammar",
+    "adaptive operating ratio",
+    "structural memory",
+    "domain adapters",
+    "ontology runtime",
+    "deterministic execution",
+    "finite audit",
+    "scientific computing",
+    "computational modeling",
+    "systems science",
+    "complex systems",
+    "origins of life",
+    "bioenergetics",
+    "hypothesis triage",
+    "falsification",
+    "research software"
+  ],
+  "relatedLink": [
+    "https://doi.org/10.5281/zenodo.20250821",
+    "https://doi.org/10.5281/zenodo.20264779"
+  ],
+  "issueTracker": "https://github.com/bampita-bico/CDFD-Runtime/issues"
+}

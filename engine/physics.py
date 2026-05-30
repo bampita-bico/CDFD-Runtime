@@ -1,4 +1,5 @@
 import numpy as np
+from numba import njit
 from engine.config import DEFAULT_DT
 
 # Mujjabi Vacuum Constants
@@ -18,6 +19,55 @@ VE_XI_S = 0.01   # adaptive spatial spreading
 LAMBDA_MS = 0.005  # spatial diffusion coefficient for M_s field
 MS_MAX    = 50.0   # solid-vacuum clamp (VPT threshold from Discovery 23)
 
+@njit(fastmath=True)
+def _njit_laplacian(field):
+    """Numba-accelerated 5-point Laplacian."""
+    res = np.empty_like(field)
+    nx, ny = field.shape
+    for i in range(nx):
+        for j in range(ny):
+            im = (i - 1) % nx
+            ip = (i + 1) % nx
+            jm = (j - 1) % ny
+            jp = (j + 1) % ny
+            res[i, j] = field[im, j] + field[ip, j] + field[i, jm] + field[i, jp] - 4.0 * field[i, j]
+    return res
+
+@njit(fastmath=True)
+def _njit_compute_derivatives(phi, C, alpha, beta, gamma, S, D, J_in=0.0):
+    """Numba-accelerated derivative computation."""
+    nx, ny = phi.shape
+    dphi_dt = np.full_like(phi, J_in + S - D)
+    dC_dt = np.empty_like(C)
+
+    # 5-point stencil for flux and laplacian
+    for i in range(nx):
+        for j in range(ny):
+            im = (i - 1) % nx
+            ip = (i + 1) % nx
+            jm = (j - 1) % ny
+            jp = (j + 1) % ny
+
+            # Flux calculation
+            c_val = max(C[i, j], 1e-9)
+            cr = (C[ip, j] + c_val) / 2.0
+            cl = (C[im, j] + c_val) / 2.0
+            cd = (C[i, jp] + c_val) / 2.0
+            cu = (C[i, jm] + c_val) / 2.0
+
+            fr = (phi[ip, j] - phi[i, j]) / cr
+            fl = (phi[im, j] - phi[i, j]) / cl
+            fd = (phi[i, jp] - phi[i, j]) / cd
+            fu = (phi[i, jm] - phi[i, j]) / cu
+
+            dphi_dt[i, j] += fr + fl + fd + fu
+
+            # Constraint evolution
+            lap_c = C[im, j] + C[ip, j] + C[i, jm] + C[i, jp] - 4.0 * C[i, j]
+            dC_dt[i, j] = alpha[i, j] * abs(dphi_dt[i, j]) - beta[i, j] * C[i, j] + gamma[i, j] * lap_c
+
+    return dphi_dt, dC_dt
+
 def update_psi(state):
     """Synchronize Ψ_s with the current Φ/C/S/Ms fields and return the tensor."""
     updater = getattr(state, "update_psi", None)
@@ -36,42 +86,15 @@ def _parameter_field(value, fallback):
     return np.broadcast_to(arr, fallback.shape).astype(float, copy=False)
 
 def laplacian(field):
-    return (
-        np.roll(field, 1, axis=0)
-        + np.roll(field, -1, axis=0)
-        + np.roll(field, 1, axis=1)
-        + np.roll(field, -1, axis=1)
-        - 4 * field
-    )
+    return _njit_laplacian(field)
 
 def compute_derivatives(phi, C, alpha, beta, gamma, S, D, J_in=0.0):
     """
     Computes the instantaneous time derivatives d(phi)/dt and d(C)/dt
     using the rigorous CDFD Runtime master equations with Acceleration-driven constraints.
+    Now Numba-accelerated for high performance.
     """
-    safe_C = np.where(C > 1e-9, C, 1e-9)
-    
-    # Conservative flux calculation (Finite Volume formulation)
-    C_R = (np.roll(safe_C, -1, axis=0) + safe_C) / 2.0
-    C_L = (np.roll(safe_C, 1, axis=0) + safe_C) / 2.0
-    C_D = (np.roll(safe_C, -1, axis=1) + safe_C) / 2.0
-    C_U = (np.roll(safe_C, 1, axis=1) + safe_C) / 2.0
-    
-    flux_R = (np.roll(phi, -1, axis=0) - phi) / C_R
-    flux_L = (np.roll(phi, 1, axis=0) - phi) / C_L
-    flux_D = (np.roll(phi, -1, axis=1) - phi) / C_D
-    flux_U = (np.roll(phi, 1, axis=1) - phi) / C_U
-    
-    # Flow evolution: dPhi/dt = J_in + nabla . (1/C nabla Phi) + S - D
-    dphi_dt = J_in + flux_R + flux_L + flux_D + flux_U + S - D
-    
-    # Constraint evolution (Acceleration-driven): dC/dt = alpha*|dPhi/dt| - beta*C + gamma*nabla^2(C)
-    growth = alpha * np.abs(dphi_dt)
-    decay = -beta * C
-    spread = gamma * laplacian(C)
-    dC_dt = growth + decay + spread
-    
-    return dphi_dt, dC_dt
+    return _njit_compute_derivatives(phi, C, alpha, beta, gamma, S, D, J_in)
 
 def step(state, dt=DEFAULT_DT, S=0.0, D=0.0, alpha=None, beta=None, gamma=None, J_in=0.0):
     """

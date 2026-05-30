@@ -37,8 +37,17 @@ def run_domain_demo(
         "mean_psi": float(state.mean_psi()),
     }
 
+    trace: list[dict[str, float | str]] = []
     for _ in range(steps):
         physics_step(state, dt=dt_eff)
+        state.update_psi()
+        trace.append({
+            "t": float(state.t),
+            "mean_phi": float(math.fsum(state.phi.flat) / state.phi.size),
+            "mean_C": float(math.fsum(state.C.flat) / state.C.size),
+            "mean_psi": float(state.mean_psi()),
+            "regime": state.regime(),
+        })
 
     final = {
         "mean_phi": float(math.fsum(state.phi.flat) / state.phi.size),
@@ -46,7 +55,7 @@ def run_domain_demo(
         "mean_psi": float(state.mean_psi()),
     }
 
-    return {
+    result = {
         "domain": name,
         "payload_keys": sorted(payload.keys()),
         "nx": nx,
@@ -57,4 +66,9 @@ def run_domain_demo(
         "final": final,
         "regime": state.regime(),
         "interpretation": adapter.interpret(state),
+        "trace": trace,
     }
+    domain_diagnostics = getattr(adapter, "runtime_diagnostics", None)
+    if callable(domain_diagnostics):
+        result["domain_diagnostics"] = domain_diagnostics()
+    return result

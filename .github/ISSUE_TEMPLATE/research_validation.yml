@@ -1,0 +1,31 @@
+name: Research validation note
+description: Submit an empirical, mathematical, or reproducibility validation note.
+title: "[validation] "
+labels: ["validation"]
+body:
+  - type: textarea
+    id: claim
+    attributes:
+      label: Claim or runtime surface
+      description: Which runtime result, adapter, paper, or CDFL model is being tested?
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Data, equations, scripts, commands, DOI links, or falsification result.
+    validations:
+      required: true
+  - type: textarea
+    id: artifact
+    attributes:
+      label: Artifact links
+      description: Attach or link reproducible artifacts when possible.
+  - type: checkboxes
+    id: boundary
+    attributes:
+      label: Boundary
+      options:
+        - label: This note does not present runtime output as deployed clinical, engineering, financial, legal, or safety advice.
+          required: true

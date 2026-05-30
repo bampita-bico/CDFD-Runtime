@@ -13,8 +13,8 @@ class PaediatricsAdapter(DomainAdapter):
 
     def interpret(self, state):
         psi = state.mean_psi()
-        if psi < 0.3:  return "Severe malnutrition/failure to thrive — urgent nutritional support"
-        if psi < 0.6:  return "Developmental concern — multi-disciplinary assessment"
-        if psi < 0.8:  return "Mild growth or developmental lag — watchful optimisation"
+        if psi < 0.3:  return "Severe malnutrition/failure-to-thrive signal"
+        if psi < 0.6:  return "Developmental-concern signal"
+        if psi < 0.8:  return "Mild growth/developmental-lag band"
         if psi <= 1.2: return "Healthy child development trajectory"
-        return "Above-average development — maintain stimulation"
+        return "Above-average development band"

@@ -12,7 +12,7 @@ class EcologyAdapter(DomainAdapter):
 
     def interpret(self, state):
         psi = state.mean_psi()
-        if psi < 0.3:  return "Ecosystem collapse — intervention critical"
-        if psi < 0.6:  return "Degraded ecosystem — habitat restoration needed"
+        if psi < 0.3:  return "Ecosystem-collapse signal"
+        if psi < 0.6:  return "Degraded-ecosystem signal"
         if psi <= 1.2: return "Healthy ecosystem equilibrium"
         return "Boom-bust cycle — monitor for trophic cascade"

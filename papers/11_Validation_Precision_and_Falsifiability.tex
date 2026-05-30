@@ -4,6 +4,7 @@
 \usepackage{hyperref}
 \usepackage{geometry}
 \geometry{margin=2.5cm}
+\emergencystretch=3em
 
 \title{\textbf{CDFD Runtime Paper 11: Validation, Precision, and Falsifiability}}
 \author{Steve Bico Mujjabi, MD\\
@@ -22,6 +23,10 @@ selection, precision analysis, and domain-specific falsification. The local
 experiments are treated as model diagnostics unless external validation is
 available.
 \end{abstract}
+
+
+\paragraph{Greek-symbol convention.}
+Unless a manuscript states a tighter equation-local meaning, Greek symbols are local CDFD variables or coefficients, not universal constants. Here $\Phi$ denotes driving flux, $\Psi_s$ denotes the adaptive operating ratio, $\Omega$ denotes a domain or state space, and $\Lambda$ denotes the Life Number where used. The coefficients $\alpha$, $\beta$, and $\gamma$ denote accumulation or reinforcement, relaxation or decay, and diffusion, coupling, or redistribution. The symbols $\delta$ and $\epsilon$ denote perturbation or tolerance scales, while $\eta$, $\lambda$, $\mu$, $\nu$, $\rho$, $\sigma$, $\tau$, and $\phi$ denote local efficiency, rate, baseline, frequency, density or correlation, noise or variance, time-scale, and phase or field terms. Subscripts restrict any coefficient to the named pathway, tissue, domain, or experiment.
 
 \begin{figure}[ht]
 \centering
@@ -63,8 +68,12 @@ is:
 \begin{verbatim}
 python cdfd.py info
 python cdfd.py domains
+python cdfd.py diagnostics
+python cdfd.py demo origins_of_life \
+  --source-scenario mixed_source_surface_trap
 python cdfd.py validate examples/heat_flow.cdfl
-python cdfd.py run examples/heat_flow.cdfl --out outputs/heat_flow_run.json
+python cdfd.py run examples/heat_flow.cdfl \
+  --out outputs/heat_flow_run.json
 \end{verbatim}
 The result envelope includes provenance and \texttt{finite\_audit}. Non-finite
 values are blockers unless the run is explicitly a boundary-failure test.
@@ -72,11 +81,12 @@ values are blockers unless the run is explicitly a boundary-failure test.
 \section{Test Evidence}
 The focused runtime check recorded:
 \begin{verbatim}
-PYTHONPATH=. /home/bampita/Projects/CDFD/.venv/bin/python \
-  -m pytest -q tests/test_cli_runtime.py tests/test_new_engine_upgrades.py
+python -m pytest -q tests/test_cli_runtime.py \
+  tests/test_new_engine_upgrades.py
 \end{verbatim}
-with seven passing tests. These tests cover CLI runner behavior, CDFL parsing
-and execution, paper-aligned diagnostics, and selected native engine upgrades.
+with 15 passing runtime and native-engine tests. These tests cover CLI runner
+behavior, CDFL parsing and execution, Part II diagnostics export,
+origins-of-life guardrails, app-key redaction, and selected native engine upgrades.
 
 \section{Precision Analysis}
 \texttt{experiments/reports/PRECISION\_ANALYSIS.md} argues that ordinary
@@ -94,7 +104,9 @@ current release-facing filter. It selects:
     \item the Mujjabi \(n=7\) Knot Stability Test as a weak
     self-stabilization stress test;
     \item the Mujjabi Life Number Boundary Test as a bridge to Part II;
-    \item frontier and gigamarathon sweeps as discovery coverage evidence.
+    \item frontier and gigamarathon sweeps as discovery coverage evidence;
+    \item \texttt{part\_ii\_runtime\_diagnostics.json} as the CLI-exported
+    source-mix and guardrail bundle.
 \end{itemize}
 It also excludes overloaded adaptive-surface output as support; that run is an
 instability boundary.
@@ -133,6 +145,6 @@ Steve Bico Mujjabi, MD. \emph{The Vacuum Equation of State: Deriving Torus Knot 
 Steve Bico Mujjabi, MD. \emph{Friction, Superconductivity, Plasma States, and Transport Mysteries: Observable Tests of Adaptive Constraint}. CDFD Part I Paper XII, preprint, 2026.
 
 \bibitem{MujjabiPartII2026}
-Steve Bico Mujjabi, MD. \emph{CDFD Part II: Origins of Life and Tri-Regime Bioenergetics}. Public release archive, 2026, \url{https://doi.org/10.5281/zenodo.20250821}.
+Steve Bico Mujjabi, MD. \emph{CDFD Part II: Origins of Life and Tri-Regime Bioenergetics}. Public release archive, 2026, \url{https://doi.org/10.5281/zenodo.20264779}.
 \end{thebibliography}
 \end{document}

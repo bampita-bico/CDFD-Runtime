@@ -12,8 +12,8 @@ class NeurologyAdapter(DomainAdapter):
 
     def interpret(self, state):
         psi = state.mean_psi()
-        if psi < 0.3:  return "Severe neurological deficit — urgent intervention"
-        if psi < 0.6:  return "Significant impairment — intensive neurorehabilitation"
-        if psi < 0.8:  return "Mild-moderate deficit — optimise neuroprotection"
+        if psi < 0.3:  return "Severe neurological-deficit signal"
+        if psi < 0.6:  return "Significant neurological-impairment signal"
+        if psi < 0.8:  return "Mild-moderate neurological-deficit band"
         if psi <= 1.2: return "Neurologically compensated"
         return "Hyperexcitable state — seizure or migraine risk"

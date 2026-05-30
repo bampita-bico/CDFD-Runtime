@@ -12,8 +12,8 @@ class NephrologyAdapter(DomainAdapter):
 
     def interpret(self, state):
         psi = state.mean_psi()
-        if psi < 0.3:  return "End-stage renal disease — dialysis likely required"
-        if psi < 0.6:  return "Severe CKD — aggressive nephroprotection needed"
-        if psi < 0.8:  return "Moderate CKD — optimise BP and proteinuria control"
+        if psi < 0.3:  return "End-stage renal-disease signal"
+        if psi < 0.6:  return "Severe CKD signal"
+        if psi < 0.8:  return "Moderate CKD band"
         if psi <= 1.2: return "Compensated renal function"
         return "Hyperfiltration — early diabetic nephropathy pattern"

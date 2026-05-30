@@ -14,8 +14,8 @@ class DermatologyAdapter(DomainAdapter):
 
     def interpret(self, state):
         psi = state.mean_psi()
-        if psi < 0.3:  return "Severe skin barrier failure — systemic treatment needed"
-        if psi < 0.6:  return "Active inflammatory skin disease — escalate therapy"
-        if psi < 0.8:  return "Partial skin remission — optimise topicals"
+        if psi < 0.3:  return "Severe skin-barrier failure signal"
+        if psi < 0.6:  return "Active inflammatory skin-disease signal"
+        if psi < 0.8:  return "Partial skin-remission model band"
         if psi <= 1.2: return "Skin barrier intact and stable"
         return "Reactive skin — monitor for hypersensitivity"

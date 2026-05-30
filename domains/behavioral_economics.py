@@ -11,6 +11,6 @@ class BehavioralEconomicsAdapter(DomainAdapter):
     def interpret(self, state):
         psi = state.mean_psi()
         if psi < 0.3:  return "Market irrationality — biases and asymmetry collapsing allocation"
-        if psi < 0.6:  return "Behavioural distortions — nudges and policy needed"
+        if psi < 0.6:  return "Behavioural-distortion signal"
         if psi <= 1.2: return "Markets reasonably rational — biases offset"
         return "Highly efficient decision-making — well-informed, low bias"

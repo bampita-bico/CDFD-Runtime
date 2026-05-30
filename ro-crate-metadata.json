@@ -1,0 +1,106 @@
+{
+  "@context": "https://w3id.org/ro/crate/1.2/context",
+  "@graph": [
+    {
+      "@id": "ro-crate-metadata.json",
+      "@type": "CreativeWork",
+      "about": {
+        "@id": "./"
+      },
+      "conformsTo": {
+        "@id": "https://w3id.org/ro/crate/1.2"
+      }
+    },
+    {
+      "@id": "./",
+      "@type": "Dataset",
+      "name": "CDFD Runtime: Constraint-Driven Flux Dynamics and CDFL Execution Engine",
+      "description": "Research software crate for the CDFD Runtime, including CLI code, runtime papers, metadata, tests, domain adapters, and reproducibility gates.",
+      "identifier": "https://doi.org/10.5281/zenodo.20343160",
+      "datePublished": "2026-05-22",
+      "license": {
+        "@id": "LICENSE"
+      },
+      "author": {
+        "@id": "https://orcid.org/0009-0001-0556-5516"
+      },
+      "hasPart": [
+        {
+          "@id": "cdfd.py"
+        },
+        {
+          "@id": "pyproject.toml"
+        },
+        {
+          "@id": "runtime/"
+        },
+        {
+          "@id": "domains/"
+        },
+        {
+          "@id": "dsl/"
+        },
+        {
+          "@id": "engine/"
+        },
+        {
+          "@id": "discovery/"
+        },
+        {
+          "@id": "ontology/"
+        },
+        {
+          "@id": "webapp/"
+        },
+        {
+          "@id": "papers/"
+        },
+        {
+          "@id": "tests/"
+        },
+        {
+          "@id": "docs/domain_maturity_matrix.json"
+        },
+        {
+          "@id": "CITATION.cff"
+        },
+        {
+          "@id": "codemeta.json"
+        }
+      ]
+    },
+    {
+      "@id": "https://orcid.org/0009-0001-0556-5516",
+      "@type": "Person",
+      "name": "Steve Bico Mujjabi, MD",
+      "affiliation": "Independent Researcher"
+    },
+    {
+      "@id": "LICENSE",
+      "@type": "CreativeWork",
+      "name": "GNU AGPLv3 or later, with separate commercial licensing option"
+    },
+    {
+      "@id": "cdfd.py",
+      "@type": "SoftwareSourceCode",
+      "name": "CDFD Runtime CLI",
+      "programmingLanguage": "Python",
+      "runtimePlatform": "Python >=3.10"
+    },
+    {
+      "@id": "docs/domain_maturity_matrix.json",
+      "@type": "File",
+      "name": "Machine-readable domain maturity matrix"
+    },
+    {
+      "@id": "papers/",
+      "@type": "Dataset",
+      "name": "Runtime paper sources and PDFs"
+    },
+    {
+      "@id": "tests/",
+      "@type": "Dataset",
+      "name": "Focused runtime tests"
+    }
+  ]
+}

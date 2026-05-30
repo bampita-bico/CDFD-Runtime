@@ -14,5 +14,5 @@ class CivilWarAdapter(DomainAdapter):
         psi = state.mean_psi()
         if psi < 0.4:  return "Stable — state contains all pressures, grievances manageable"
         if psi < 0.7:  return "Tense peace — grievances rising, state still holds"
-        if psi <= 1.2: return "High instability — armed groups mobilising, conflict likely"
+        if psi <= 1.2: return "High instability - armed-group mobilisation risk"
         return "Civil war — grievances and factions overwhelming state capacity"

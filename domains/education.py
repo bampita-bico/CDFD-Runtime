@@ -13,6 +13,6 @@ class EducationAdapter(DomainAdapter):
     def interpret(self, state):
         psi = state.mean_psi()
         if psi < 0.3:  return "Education system failing — generational knowledge gap"
-        if psi < 0.6:  return "Low educational attainment — structural reform needed"
+        if psi < 0.6:  return "Low educational-attainment signal"
         if psi <= 1.2: return "Education system in equilibrium"
         return "High educational flow — knowledge economy emerging"

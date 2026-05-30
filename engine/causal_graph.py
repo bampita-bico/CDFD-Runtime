@@ -80,13 +80,48 @@ class CausalGraph:
             "strongest": self.strongest(5),
         }
 
+    def to_dot(self):
+        """Returns the graph in Graphviz DOT format for professional visualization."""
+        lines = ["digraph CausalGraph {", "    rankdir=LR;", "    node [shape=box, style=filled, fillcolor=lightblue];"]
+        for edge in self.edges:
+            weight = edge["strength"]
+            label = f"{weight:.2f}"
+            penwidth = weight * 5
+            lines.append(f'    "{edge["from"]}" -> "{edge["to"]}" [label="{label}", penwidth={penwidth:.2f}];')
+        lines.append("}")
+        return "\n".join(lines)
+
+    def to_json(self):
+        """Returns the graph structure in standard JSON format."""
+        import json
+        return json.dumps({
+            "nodes": self.nodes,
+            "edges": self.edges
+        }, indent=2)
+
 
 def extract_series(history):
-    """Pull named time series out of a history list of dicts."""
+    """Pull numeric time series out of a history list of dicts."""
     if not history:
         return {}
     keys = [k for k in history[0] if k != "t"]
-    return {k: [h[k] for h in history] for k in keys}
+    series = {}
+    for key in keys:
+        values = []
+        for row in history:
+            value = row.get(key)
+            try:
+                number = float(value)
+            except (TypeError, ValueError):
+                values = []
+                break
+            if not np.isfinite(number):
+                values = []
+                break
+            values.append(number)
+        if len(values) == len(history):
+            series[key] = values
+    return series
 
 
 def build_causal_graph(history, extra_series=None, threshold=0.3):

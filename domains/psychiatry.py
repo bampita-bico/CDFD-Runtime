@@ -14,8 +14,8 @@ class PsychiatryAdapter(DomainAdapter):
 
     def interpret(self, state):
         psi = state.mean_psi()
-        if psi < 0.3:  return "Acute psychiatric crisis — inpatient stabilisation"
-        if psi < 0.6:  return "Severe psychiatric burden — intensive therapy and medication review"
-        if psi < 0.8:  return "Moderate symptoms — CBT and pharmacotherapy optimisation"
+        if psi < 0.3:  return "Acute psychiatric-crisis signal"
+        if psi < 0.6:  return "Severe psychiatric-burden signal"
+        if psi < 0.8:  return "Moderate-symptom model band"
         if psi <= 1.2: return "Mental equilibrium maintained"
-        return "Hypomanic or activated state — mood stabiliser review"
+        return "Hypomanic/activated-state signal"

@@ -13,6 +13,6 @@ class NetworksAdapter(DomainAdapter):
     def interpret(self, state):
         psi = state.mean_psi()
         if psi < 0.3:  return "Network failure — congestion or infrastructure fault"
-        if psi < 0.6:  return "Degraded network — traffic shaping and rerouting needed"
+        if psi < 0.6:  return "Degraded network - traffic-shaping/rerouting flag"
         if psi <= 1.2: return "Network operating efficiently"
         return "Network underutilised — capacity expansion opportunity"

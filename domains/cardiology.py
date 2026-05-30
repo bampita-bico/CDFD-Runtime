@@ -12,8 +12,8 @@ class CardiologyAdapter(DomainAdapter):
 
     def interpret(self, state):
         psi = state.mean_psi()
-        if psi < 0.3:  return "Cardiogenic shock — critical cardiac failure"
-        if psi < 0.6:  return "Severe heart failure — urgent optimisation"
-        if psi < 0.8:  return "Reduced cardiac output — titrate therapy"
+        if psi < 0.3:  return "Cardiogenic-shock signal - critical cardiac band"
+        if psi < 0.6:  return "Severe heart-failure signal"
+        if psi < 0.8:  return "Reduced cardiac-output band"
         if psi <= 1.2: return "Compensated cardiac function"
-        return "Hypertensive overload — risk of acute event"
+        return "Hypertensive-overload signal"

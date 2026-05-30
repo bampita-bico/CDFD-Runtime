@@ -16,4 +16,4 @@ class FamineRiskAdapter(DomainAdapter):
         if psi < 0.3:  return "Famine averted — food production and access adequate"
         if psi < 0.6:  return "Food crisis warning — access and production under stress"
         if psi <= 1.2: return "Famine conditions — acute hunger, supply disrupted"
-        return "Catastrophic famine — mass starvation without immediate intervention"
+        return "Catastrophic-famine signal - mass-starvation risk band"

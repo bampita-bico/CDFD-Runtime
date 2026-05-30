@@ -18,6 +18,7 @@
 | `discovery_ool_phase_results.h5` | four grid points near `Lambda = 1` | Use only as a cross-Part-II phase-boundary bridge. |
 | `frontier_sweep.h5` | 2500 points, 2487 non-trivial candidate records | Use as hypothesis triage for future tests. |
 | `gigamarathon_1000_results.h5` | 10 domains x 100 points | Use as discovery-engine coverage evidence, not physical validation. |
+| `part_ii_runtime_diagnostics.json` | aromatic source-mix rows + OOL demo envelope; best row `mixed_source_surface_trap` score `0.610` | Regenerate with `python experiments/export_part_ii_diagnostics.py`. Candidate diagnostics only; exogenous organics are a supply term, not a Life Number substitute. |
 
 ## Do Not Use as Support
 

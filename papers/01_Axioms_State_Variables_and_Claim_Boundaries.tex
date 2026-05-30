@@ -7,6 +7,7 @@
 \usepackage{hyperref}
 \usepackage{geometry}
 \geometry{margin=2.5cm}
+\emergencystretch=3em
 
 \newtheorem{theorem}{Theorem}
 \newtheorem{postulate}{Postulate}
@@ -33,6 +34,10 @@ state language that can be stress-tested, falsified, and reused across the
 runtime, CDFL models, domain adapters, validation tools, and local discovery
 experiments.
 \end{abstract}
+
+\paragraph{Greek-symbol convention.}
+Unless a manuscript states a tighter equation-local meaning, Greek symbols are local CDFD variables or coefficients, not universal constants. Here $\Phi$ denotes driving flux, $\Psi_s$ denotes the adaptive operating ratio, $\Omega$ denotes a domain or state space, and $\Lambda$ denotes the Life Number where used. The coefficients $\alpha$, $\beta$, and $\gamma$ denote accumulation or reinforcement, relaxation or decay, and diffusion, coupling, or redistribution. The symbols $\delta$ and $\epsilon$ denote perturbation or tolerance scales, while $\eta$, $\lambda$, $\mu$, $\nu$, $\rho$, $\sigma$, $\tau$, and $\phi$ denote local efficiency, rate, baseline, frequency, density or correlation, noise or variance, time-scale, and phase or field terms. Subscripts restrict any coefficient to the named pathway, tissue, domain, or experiment.
+
 
 \begin{figure}[ht]
 \centering
@@ -127,8 +132,12 @@ These variables are implemented in \texttt{engine/state.py}. The physics update
 lives primarily in \texttt{engine/physics.py}; shared finite checks, JSON-safe
 summaries, the scalar operating ratio, the Life Number, and bounded diagnostic
 helpers live in \texttt{runtime/diagnostics.py}. The command surface is exposed
-through \texttt{cdfd.py}, while CDFL models provide a readable way to define
-systems and rules.
+through \texttt{cdfd.py} (\texttt{info}, \texttt{domains}, \texttt{demo},
+\texttt{diagnostics}, \texttt{validate}, \texttt{run}, \texttt{export},
+\texttt{auth}), while CDFL models provide a readable way to define systems and
+rules. \texttt{cdfd.py diagnostics} writes
+\texttt{experiments/outputs/part\_ii\_runtime\_diagnostics.json} with guarded
+Part II source-mix and endpoint status rows.
 
 \section{Experiment and Discovery Hooks}
 The experiments directory provides candidate diagnostics tied to these axioms:
@@ -175,6 +184,6 @@ Steve Bico Mujjabi, MD. \emph{The Vacuum Equation of State: Deriving Torus Knot 
 Steve Bico Mujjabi, MD. \emph{Friction, Superconductivity, Plasma States, and Transport Mysteries: Observable Tests of Adaptive Constraint}. CDFD Part I Paper XII, preprint, 2026.
 
 \bibitem{MujjabiPartII2026}
-Steve Bico Mujjabi, MD. \emph{CDFD Part II: Origins of Life and Tri-Regime Bioenergetics}. Public release archive, 2026, \url{https://doi.org/10.5281/zenodo.20250821}.
+Steve Bico Mujjabi, MD. \emph{CDFD Part II: Origins of Life and Tri-Regime Bioenergetics}. Public release archive, 2026, \url{https://doi.org/10.5281/zenodo.20264779}.
 \end{thebibliography}
 \end{document}

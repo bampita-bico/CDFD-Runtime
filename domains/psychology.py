@@ -12,7 +12,7 @@ class PsychologyAdapter(DomainAdapter):
 
     def interpret(self, state):
         psi = state.mean_psi()
-        if psi < 0.3:  return "Psychological crisis — immediate clinical support"
-        if psi < 0.6:  return "Significant psychological burden — therapy indicated"
+        if psi < 0.3:  return "Psychological-crisis signal"
+        if psi < 0.6:  return "Significant psychological-burden signal"
         if psi <= 1.2: return "Psychological equilibrium"
         return "Flourishing — high wellbeing and resilience"

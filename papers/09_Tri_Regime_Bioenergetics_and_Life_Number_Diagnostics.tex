@@ -4,6 +4,7 @@
 \usepackage{hyperref}
 \usepackage{geometry}
 \geometry{margin=2.5cm}
+\emergencystretch=3em
 
 \title{\textbf{CDFD Runtime Paper 09: Tri-Regime Bioenergetics and Life-Number Diagnostics}}
 \author{Steve Bico Mujjabi, MD\\
@@ -24,6 +25,10 @@ has solved the origin of life. The correct claim is that it provides a
 reproducible way to test life-like throughput thresholds under explicit model
 assumptions.
 \end{abstract}
+
+\paragraph{Greek-symbol convention.}
+Unless a manuscript states a tighter equation-local meaning, Greek symbols are local CDFD variables or coefficients, not universal constants. Here $\Phi$ denotes driving flux, $\Psi_s$ denotes the adaptive operating ratio, $\Omega$ denotes a domain or state space, and $\Lambda$ denotes the Life Number where used. The coefficients $\alpha$, $\beta$, and $\gamma$ denote accumulation or reinforcement, relaxation or decay, and diffusion, coupling, or redistribution. The symbols $\delta$ and $\epsilon$ denote perturbation or tolerance scales, while $\eta$, $\lambda$, $\mu$, $\nu$, $\rho$, $\sigma$, $\tau$, and $\phi$ denote local efficiency, rate, baseline, frequency, density or correlation, noise or variance, time-scale, and phase or field terms. Subscripts restrict any coefficient to the named pathway, tissue, domain, or experiment.
+
 
 \begin{figure}[ht]
 \centering
@@ -54,7 +59,7 @@ The basic local operating ratio is still
     \Psi_s=\frac{\Phi}{C}S M_s.
 \end{equation}
 For origins-of-life questions, however, a system-wide viability number is also
-needed because local $\Psi_s$ can be high in one region and low elsewhere.
+necessary because local $\Psi_s$ can be high in one region and low elsewhere.
 
 \section{The Life Number}
 The Life Number is
@@ -84,11 +89,9 @@ from \texttt{engine/biology.py}. The runtime stores channel summaries in
 \texttt{throughput\_J}.
 
 \section{Experiment: OOL Phase Boundary}
-\texttt{experiments/notebooks/discovery\_ool\_phase.py} sweeps a 50 by 50
-parameter grid over energy input and geochemical constraint. The report
-\texttt{experiments/reports/NEW\_DISCOVERIES\_REPORT.md} describes candidate
-points near $\Lambda=1$, and
-\texttt{experiments/outputs/discovery\_ool\_phase\_results.h5} stores the output.
+The OOL phase script sweeps a 50 by 50 parameter grid over energy input and
+geochemical constraint. The public report describes candidate points near
+$\Lambda=1$, and the selected HDF5 output stores the grid.
 
 The useful result is a model diagnostic: the runtime can locate and save a
 phase-boundary surface in the declared toy parameter space. The result still needs testing against laboratory chemistry, geochemical constraints, and independent
@@ -102,10 +105,17 @@ The broader biology experiments include:
     \item \texttt{experiments/run\_bio\_mujjabi\_tests.py}: parasitic-drain and
     cycling-retention tests;
     \item \texttt{experiments/run\_drug\_synergy\_predictions.py}: same-axis
-    versus cross-axis intervention toy trajectories.
+    versus cross-axis perturbation toy trajectories.
 \end{itemize}
-These are model diagnostics and hypothesis generators. They are not clinical
-advice or validated therapy rules.
+The public \texttt{runtime/diagnostics.py} module exposes guarded aromatic
+source-mix rows (Part II Paper 7), photochemical endpoint status (Paper 11),
+and the Life Number supply guardrail. The primary export path is
+\texttt{python cdfd.py diagnostics}; the optional Streamlit studio and
+\texttt{cdfd.py demo origins\_of\_life --source-scenario <name>} surface the
+same values.
+
+These are model diagnostics and hypothesis generators. They are not care
+instructions or validated use rules.
 
 \section{Falsification Conditions}
 The tri-regime model fails or requires revision if:
@@ -140,6 +150,6 @@ Steve Bico Mujjabi, MD. \emph{The Vacuum Equation of State: Deriving Torus Knot 
 Steve Bico Mujjabi, MD. \emph{Friction, Superconductivity, Plasma States, and Transport Mysteries: Observable Tests of Adaptive Constraint}. CDFD Part I Paper XII, preprint, 2026.
 
 \bibitem{MujjabiPartII2026}
-Steve Bico Mujjabi, MD. \emph{CDFD Part II: Origins of Life and Tri-Regime Bioenergetics}. Public release archive, 2026, \url{https://doi.org/10.5281/zenodo.20250821}.
+Steve Bico Mujjabi, MD. \emph{CDFD Part II: Origins of Life and Tri-Regime Bioenergetics}. Public release archive, 2026, \url{https://doi.org/10.5281/zenodo.20264779}.
 \end{thebibliography}
 \end{document}

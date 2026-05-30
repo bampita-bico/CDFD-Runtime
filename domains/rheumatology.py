@@ -12,8 +12,8 @@ class RheumatologyAdapter(DomainAdapter):
 
     def interpret(self, state):
         psi = state.mean_psi()
-        if psi < 0.3:  return "Severe active disease — biologic therapy indicated"
-        if psi < 0.6:  return "Moderate disease activity — escalate DMARDs"
-        if psi < 0.8:  return "Low disease activity — maintain and monitor"
-        if psi <= 1.2: return "Clinical remission"
-        return "Paradoxical inflammation — check for infection or flare"
+        if psi < 0.3:  return "Severe active-disease signal"
+        if psi < 0.6:  return "Moderate disease-activity signal"
+        if psi < 0.8:  return "Low disease-activity band"
+        if psi <= 1.2: return "Remission model band"
+        return "Paradoxical-inflammation signal"

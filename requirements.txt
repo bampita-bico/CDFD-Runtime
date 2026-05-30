@@ -1,6 +1,6 @@
+# Core CLI/runtime dependencies only.
+# Optional groups live in pyproject.toml and the split requirements files.
 numpy>=1.26
+numba>=0.59
 requests>=2.31
 scipy>=1.11
-h5py>=3.10
-matplotlib>=3.8
-pytest>=8.0

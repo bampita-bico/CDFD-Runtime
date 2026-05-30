@@ -12,7 +12,7 @@ class PharmacologyAdapter(DomainAdapter):
 
     def interpret(self, state):
         psi = state.mean_psi()
-        if psi < 0.3:  return "Drug failure — switch or combination therapy needed"
-        if psi < 0.6:  return "Subtherapeutic — dose optimisation or adherence support"
-        if psi <= 1.2: return "Therapeutic window achieved"
-        return "Drug toxicity risk — dose reduction or drug holiday"
+        if psi < 0.3:  return "Drug-failure signal"
+        if psi < 0.6:  return "Low-effect model band"
+        if psi <= 1.2: return "Target-effect window achieved"
+        return "Drug-toxicity-risk signal"

@@ -13,6 +13,6 @@ class PoliticsAdapter(DomainAdapter):
     def interpret(self, state):
         psi = state.mean_psi()
         if psi < 0.3:  return "Authoritarian collapse — democratic institutions failing"
-        if psi < 0.6:  return "Democratic erosion — civil society mobilisation needed"
+        if psi < 0.6:  return "Democratic-erosion signal"
         if psi <= 1.2: return "Functioning democratic governance"
         return "High civic energy — potential for rapid political change"

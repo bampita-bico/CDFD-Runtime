@@ -12,8 +12,8 @@ class PulmonologyAdapter(DomainAdapter):
 
     def interpret(self, state):
         psi = state.mean_psi()
-        if psi < 0.3:  return "Respiratory failure — ventilatory support required"
-        if psi < 0.6:  return "Severe obstruction/restriction — escalate bronchodilators"
-        if psi < 0.8:  return "Moderate respiratory impairment — optimise inhalers"
+        if psi < 0.3:  return "Respiratory-failure signal"
+        if psi < 0.6:  return "Severe obstruction/restriction signal"
+        if psi < 0.8:  return "Moderate respiratory-impairment band"
         if psi <= 1.2: return "Adequate respiratory function"
         return "Hyperventilation state — anxiety or early compensation"
