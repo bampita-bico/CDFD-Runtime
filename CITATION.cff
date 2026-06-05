@@ -1,16 +1,16 @@
 cff-version: 1.2.0
 message: "If you use CDFD Runtime, cite this software release and cite the Part I and Part II CDFD archives when their framework or examples are part of your work."
 title: "CDFD Runtime: Constraint-Driven Flux Dynamics and CDFL Execution Engine"
-version: "1.0.1"
+version: "1.0.2"
 doi: 10.5281/zenodo.20343160
-date-released: 2026-05-22
+date-released: 2026-06-05
 license: AGPL-3.0-or-later
 repository-code: "https://github.com/bampita-bico/CDFD-Runtime"
 authors:
   - family-names: Mujjabi
     given-names: Steve Bico
     name-suffix: MD
-    affiliation: Independent Researcher
+    affiliation: Vura Labs
     orcid: "https://orcid.org/0009-0001-0556-5516"
 abstract: "Public command-line runtime for Constraint-Driven Flux Dynamics and CDFL. The release includes deterministic CLI execution, the CDFL parser and executor, runtime finite-audit helpers, domain adapters, ontology execution, curated public experiments, a 12-paper runtime spine, compiled PDFs, and tests. Outputs are model diagnostics and falsification targets, not empirical proof or deployed decision systems."
 keywords:
