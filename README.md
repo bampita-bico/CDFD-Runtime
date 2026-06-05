@@ -12,7 +12,12 @@ servers, private datasets, API keys, or hosted infrastructure.
 ## Author
 
 Steve Bico Mujjabi, MD<br>
+Independent Researcher<br>
+Founder, Vura Labs<br>
+Kampala, Uganda<br>
 ORCID: https://orcid.org/0009-0001-0556-5516
+
+Institutional home: **Vura Labs**
 
 ## Release Naming
 
