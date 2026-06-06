@@ -1,4 +1,4 @@
-# Runtime Paper Sync (May 2026)
+# Runtime Paper Sync (May-June 2026)
 
 This checklist maps the 12 runtime papers to the current public repository state.
 Rebuild PDFs after LaTeX edits: `bash papers/build_pdfs.sh`.
@@ -8,12 +8,15 @@ Rebuild PDFs after LaTeX edits: `bash papers/build_pdfs.sh`.
 | Runtime fact | Papers |
 |---|---|
 | Primary surface: `python cdfd.py` (CLI-first) | 04, 06, 11 |
-| Commands: info, domains, demo, diagnostics, validate, run, export, auth | 01, 04, 06 |
+| Commands: info, domains, demo, diagnostics, cdfl, validate, run, gallery, compare, report, explain, llm, export, auth | 01, 04, 06 |
+| CDFL workbench: lint, format, AST, sample, runtime-backed validation/run | 02, 04, 05, 06, 11 |
 | `python cdfd.py diagnostics` → `experiments/outputs/part_ii_runtime_diagnostics.json` | 01, 04, 09, 11 |
-| Optional web: `python -m webapp.run_server` (not a second engine) | 06 |
+| Optional web: `python -m webapp.run_server` with CDFL Workbench (not a second engine) | 06 |
 | `webapp/neo4j_ontology.py` (does not shadow `ontology/` package) | 04, 06 |
 | 196 domain adapters (`cdfd.py domains`) | 10 |
 | Result envelopes + `finite_audit` on CLI output | 04, 05, 11 |
+| VS Code extension under `tools/cdfl-vscode` calls the same runtime CDFL tooling | 05, 11 |
+| `cdfd.py llm ...` provider interpretation sits above deterministic results; `auth` aliases provider-key status | 04, 06, 12 |
 
 ## Part II diagnostics
 
@@ -39,8 +42,10 @@ Rebuild PDFs after LaTeX edits: `bash papers/build_pdfs.sh`.
 
 | Runtime fact | Papers |
 |---|---|
-| `tests/test_cli_runtime.py`: 12 tests | 04, 11 |
-| `tests/test_new_engine_upgrades.py` (native engine) | 04, 11 |
+| `tests/test_cli_runtime.py`, `tests/test_release_surfaces.py`, `tests/test_cdfl_vscode_extension.py`: 38 focused tests in the June sync pass | 04, 11 |
+| `cdfd.py doctor --json`: 11 ok checks in the June sync pass | 04, 11 |
+| `cdfd.py gallery --steps 1 --nx 4 --ny 4 --json`: ok finite-audited gallery in the June sync pass | 04, 11 |
+| VS Code Extension Development Host smoke: `.cdfl` mode, commands, diagnostics, formatting, validate/run | 05, 11 |
 
 ## Already aligned (no May 2026 text change required)
 
@@ -50,6 +55,7 @@ Rebuild PDFs after LaTeX edits: `bash papers/build_pdfs.sh`.
 
 ## Not claimed in papers (by design)
 
-- API server (listed as future in Paper 06 ordering only)
+- API server (listed as future service/API wrapper in Paper 06 ordering only)
 - Empirical validation of CDFD theory
 - Neo4j required for CLI operation
+- LLM output as validation, engine input, or deterministic evidence

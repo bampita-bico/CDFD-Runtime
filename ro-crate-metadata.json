@@ -15,9 +15,9 @@
       "@id": "./",
       "@type": "Dataset",
       "name": "CDFD Runtime: Constraint-Driven Flux Dynamics and CDFL Execution Engine",
-      "description": "Research software crate for the CDFD Runtime, including CLI code, runtime papers, metadata, tests, domain adapters, and reproducibility gates.",
+      "description": "Research software crate for the CDFD Runtime, including CLI code, CDFL tooling, optional Runtime Studio, VS Code language support, runtime papers, metadata, tests, domain adapters, and reproducibility gates.",
       "identifier": "https://doi.org/10.5281/zenodo.20343160",
-      "datePublished": "2026-05-22",
+      "datePublished": "2026-06-06",
       "license": {
         "@id": "LICENSE"
       },
@@ -51,6 +51,9 @@
         },
         {
           "@id": "webapp/"
+        },
+        {
+          "@id": "tools/cdfl-vscode/"
         },
         {
           "@id": "papers/"
@@ -96,6 +99,12 @@
       "@id": "papers/",
       "@type": "Dataset",
       "name": "Runtime paper sources and PDFs"
+    },
+    {
+      "@id": "tools/cdfl-vscode/",
+      "@type": "SoftwareSourceCode",
+      "name": "CDFL Language Support for VS Code",
+      "programmingLanguage": "JavaScript"
     },
     {
       "@id": "tests/",

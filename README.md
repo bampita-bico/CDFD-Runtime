@@ -29,20 +29,20 @@ Software DOI: https://doi.org/10.5281/zenodo.20343160
 
 Constraint-Driven Flux Dynamics; CDFD; CDFD Runtime; CDFL; executable model
 grammar; adaptive operating ratio; structural memory; domain adapters;
-ontology runtime; deterministic execution; finite audit; scientific computing;
-computational modeling; systems science; complex systems; physics simulation;
-origins of life; bioenergetics; hypothesis triage; falsification; candidate
-laws; Mujjabi laws; Mujjabi tests; reproducible research; open science;
-research software.
+ontology runtime; CDFL workbench; Runtime Studio; VS Code language support;
+deterministic execution; finite audit; scientific computing; computational
+modeling; systems science; complex systems; physics simulation; origins of
+life; bioenergetics; hypothesis triage; falsification; candidate laws; Mujjabi
+laws; Mujjabi tests; reproducible research; open science; research software.
 
 ## GitHub Topics
 
 `cdfd`, `cdfd-runtime`, `cdfl`, `constraint-driven-flux-dynamics`,
 `adaptive-systems`, `scientific-computing`, `computational-modeling`,
-`systems-science`, `complex-systems`, `physics-simulation`, `ontology`,
+`systems-science`, `complex-systems`, `physics-simulation`,
 `domain-adapters`, `reproducible-research`, `open-science`,
-`origins-of-life`, `bioenergetics`, `validation`, `falsifiability`,
-`research-software`, `agplv3`
+`origins-of-life`, `bioenergetics`, `falsifiability`, `research-software`,
+`agplv3`, `vscode-extension`, `streamlit`
 
 ## 5-Minute Path
 
@@ -51,7 +51,7 @@ git clone https://github.com/bampita-bico/CDFD-Runtime.git
 cd CDFD-Runtime
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install -e ".[web]"
+python -m pip install -e .
 ```
 
 Run the installed CLI:
@@ -63,7 +63,6 @@ mkdir -p outputs
 cdfd gallery --save-run --json --out outputs/gallery.json
 cdfd report outputs/gallery.json --format markdown --out outputs/gallery_report.md
 cdfd explain outputs/gallery.json --format markdown --out outputs/gallery_explain.md
-python -m webapp.run_server
 ```
 
 From a source checkout, `python cdfd.py ...` is equivalent to `cdfd ...`.
@@ -80,6 +79,7 @@ Optional Streamlit Studio:
 
 ```bash
 python -m pip install -e ".[web]"
+python -m webapp.run_server
 ```
 
 Development, experiments, packaging, and tests:
@@ -87,6 +87,13 @@ Development, experiments, packaging, and tests:
 ```bash
 python -m pip install -e ".[dev,web,experiments]"
 ```
+
+The source repository contains the CLI runtime, optional Streamlit Studio,
+runtime papers, tests, and the VS Code CDFL extension source. Core users install
+the CLI/runtime path with `python -m pip install -e .`; the web app dependencies
+are only installed with `.[web]`, and the VS Code extension is installed from
+its own `.vsix` or marketplace package rather than through the Python CLI
+package.
 
 The split requirements files mirror these modes:
 
@@ -115,6 +122,9 @@ cdfd demo origins_of_life --source-scenario mixed_source_surface_trap
 Validate and run a CDFL model:
 
 ```bash
+cdfd cdfl lint examples/heat_flow.cdfl
+cdfd cdfl ast examples/heat_flow.cdfl --json
+cdfd cdfl format examples/heat_flow.cdfl
 cdfd validate examples/heat_flow.cdfl
 cdfd run examples/heat_flow.cdfl --nx 4 --ny 4 --out outputs/heat_flow_run.json
 cdfd export outputs/heat_flow_run.json --out outputs/heat_flow_export.json
@@ -138,7 +148,7 @@ source-mix scenarios, the Life Number supply guardrail, and Paper 11
 photochemical endpoint status where chlorophyll and eumelanin are mature
 examples rather than origin requirements.
 
-Optional visual layer (same engine, not a separate physics stack):
+Optional visual layer with CDFL Workbench (same engine, not a separate physics stack):
 
 ```bash
 python -m webapp.run_server
@@ -174,6 +184,7 @@ See `webapp/README.md` for panel descriptions.
 - `papers/`: 12 runtime papers and rebuilt PDFs.
 - `tests/`: smoke and regression tests for the public runtime surface.
 - `webapp/`: Streamlit visualization over the public engine (CDFD Runtime Studio).
+- `tools/cdfl-vscode/`: CDFL Language Support VS Code extension source.
 - `CITATION.cff`: GitHub citation metadata.
 - `.zenodo.json`: Zenodo deposit metadata and keywords.
 - `codemeta.json` and `ro-crate-metadata.json`: research software metadata.

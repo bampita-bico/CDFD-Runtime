@@ -11,6 +11,7 @@ from typing import Any
 
 from domains.demo_runner import run_domain_demo
 from domains.registry import DomainRegistry
+from dsl.cdfl_tools import CANONICAL_HEAT_FLOW, analyze_cdfl_text, format_cdfl_text
 from dsl.executor import Executor
 from dsl.lexer import tokenize
 from dsl.parser import ParseError, parse
@@ -61,7 +62,7 @@ def runtime_info() -> dict[str, Any]:
         {
             "name": "CDFD Runtime",
             "language": "CDFL",
-            "platform_order": ["engine", "cli", "api", "webapp"],
+            "platform_order": ["engine", "cli", "api", "webapp", "editor"],
             "primary_surface": "cli",
             "cli_status": "available",
             "domain_count": len(domains),
@@ -76,6 +77,7 @@ def runtime_info() -> dict[str, Any]:
                 "report",
                 "explain",
                 "llm",
+                "cdfl",
                 "validate",
                 "run",
                 "export",
@@ -83,9 +85,11 @@ def runtime_info() -> dict[str, Any]:
             ],
             "entrypoints": {
                 "cli": "python cdfd.py",
+                "cdfl_tooling": "python cdfd.py cdfl lint examples/heat_flow.cdfl",
                 "legacy_domain_cli": "python -m domains",
                 "diagnostics_export": "python cdfd.py diagnostics --out experiments/outputs/part_ii_runtime_diagnostics.json",
                 "webapp_optional": "python -m webapp.run_server",
+                "vscode_extension_optional": "tools/cdfl-vscode",
             },
             "app_boundary": {
                 "provider_inventory": "python cdfd.py llm providers",
@@ -111,7 +115,7 @@ def runtime_info() -> dict[str, Any]:
                 "validation",
                 "discovery",
             ],
-            "optional_surfaces": ["webapp"],
+            "optional_surfaces": ["webapp", "vscode_extension"],
         },
     )
 
@@ -368,6 +372,10 @@ def _read_cdfl(path: str | Path) -> str:
     return Path(path).read_text()
 
 
+def analyze_cdfl(path: str | Path) -> dict[str, Any]:
+    return analyze_cdfl_text(_read_cdfl(path))
+
+
 def compile_cdfl(path: str | Path) -> tuple[list[Any], list[Any]]:
     code = _read_cdfl(path)
     tokens = tokenize(code)
@@ -375,21 +383,27 @@ def compile_cdfl(path: str | Path) -> tuple[list[Any], list[Any]]:
     return tokens, nodes
 
 
-def validate_cdfl(path: str | Path, include_traceback: bool = False) -> dict[str, Any]:
+def validate_cdfl(path: str | Path, include_traceback: bool = False, command: str | None = None) -> dict[str, Any]:
     model_path = Path(path)
+    command_label = command or f"cdfd validate {model_path}"
     try:
-        tokens, nodes = compile_cdfl(model_path)
-        token_count = max(0, len(tokens) - 1)
+        analysis = analyze_cdfl(model_path)
+        payload = {
+            "file": str(model_path),
+            "valid": analysis["valid"],
+            "token_count": analysis["token_count"],
+            "node_count": analysis["node_count"],
+            "nodes": [node["type"] for node in analysis["nodes"]],
+            "diagnostics": analysis["diagnostics"],
+            "diagnostic_summary": analysis["diagnostic_summary"],
+        }
+        errors = [row["message"] for row in analysis["diagnostics"] if row.get("severity") == "error"]
         return result_envelope(
             "cdfl_validation",
-            f"cdfd validate {model_path}",
-            {
-                "file": str(model_path),
-                "valid": True,
-                "token_count": token_count,
-                "node_count": len(nodes),
-                "nodes": [type(node).__name__ for node in nodes],
-            },
+            command_label,
+            payload,
+            status="ok" if analysis["valid"] else "error",
+            errors=errors if errors else None,
         )
     except (OSError, ParseError, Exception) as exc:
         errors = [str(exc)]
@@ -397,22 +411,177 @@ def validate_cdfl(path: str | Path, include_traceback: bool = False) -> dict[str
             errors.append(traceback.format_exc())
         return result_envelope(
             "cdfl_validation",
-            f"cdfd validate {model_path}",
+            command_label,
             {"file": str(model_path), "valid": False},
             status="error",
             errors=errors,
         )
 
 
-def run_cdfl(path: str | Path, *, nx: int = 16, ny: int = 16, include_traceback: bool = False) -> dict[str, Any]:
+def lint_cdfl(path: str | Path, include_traceback: bool = False) -> dict[str, Any]:
     model_path = Path(path)
+    try:
+        analysis = analyze_cdfl(model_path)
+        summary = analysis["diagnostic_summary"]
+        errors = [row["message"] for row in analysis["diagnostics"] if row.get("severity") == "error"]
+        payload = {
+            "file": str(model_path),
+            "valid": analysis["valid"],
+            "token_count": analysis["token_count"],
+            "node_count": analysis["node_count"],
+            "diagnostics": analysis["diagnostics"],
+            "diagnostic_summary": summary,
+        }
+        return result_envelope(
+            "cdfl_lint",
+            f"cdfd cdfl lint {model_path}",
+            payload,
+            status="ok" if summary.get("error", 0) == 0 else "error",
+            errors=errors if errors else None,
+        )
+    except Exception as exc:
+        errors = [str(exc)]
+        if include_traceback:
+            errors.append(traceback.format_exc())
+        return result_envelope(
+            "cdfl_lint",
+            f"cdfd cdfl lint {model_path}",
+            {"file": str(model_path), "valid": False},
+            status="error",
+            errors=errors,
+        )
+
+
+def format_cdfl_file(
+    path: str | Path,
+    *,
+    output_path: str | Path | None = None,
+    in_place: bool = False,
+    indent_size: int = 2,
+) -> dict[str, Any]:
+    model_path = Path(path)
+    try:
+        if in_place and output_path is not None:
+            return result_envelope(
+                "cdfl_format",
+                f"cdfd cdfl format {model_path}",
+                {"file": str(model_path), "output": str(output_path), "in_place": in_place},
+                status="error",
+                errors=["Use either --in-place or --out, not both."],
+            )
+        original = _read_cdfl(model_path)
+        formatted = format_cdfl_text(original, indent_size=indent_size)
+        changed = formatted != original
+        output = None
+        if in_place:
+            model_path.write_text(formatted)
+            output = model_path
+        elif output_path is not None:
+            output = Path(output_path)
+            output.parent.mkdir(parents=True, exist_ok=True)
+            output.write_text(formatted)
+
+        return result_envelope(
+            "cdfl_format",
+            f"cdfd cdfl format {model_path}",
+            {
+                "file": str(model_path),
+                "output": str(output) if output else None,
+                "in_place": in_place,
+                "indent_size": indent_size,
+                "changed": changed,
+                "formatted": formatted,
+            },
+        )
+    except Exception as exc:
+        return result_envelope(
+            "cdfl_format",
+            f"cdfd cdfl format {model_path}",
+            {"file": str(model_path), "output": str(output_path) if output_path else None, "in_place": in_place},
+            status="error",
+            errors=[str(exc)],
+        )
+
+
+def cdfl_ast(path: str | Path, include_traceback: bool = False) -> dict[str, Any]:
+    model_path = Path(path)
+    try:
+        analysis = analyze_cdfl(model_path)
+        errors = [row["message"] for row in analysis["diagnostics"] if row.get("severity") == "error"]
+        return result_envelope(
+            "cdfl_ast",
+            f"cdfd cdfl ast {model_path}",
+            {
+                "file": str(model_path),
+                "valid": analysis["valid"],
+                "token_count": analysis["token_count"],
+                "node_count": analysis["node_count"],
+                "nodes": analysis["nodes"],
+                "diagnostics": analysis["diagnostics"],
+                "diagnostic_summary": analysis["diagnostic_summary"],
+            },
+            status="ok" if analysis["valid"] else "error",
+            errors=errors if errors else None,
+        )
+    except Exception as exc:
+        errors = [str(exc)]
+        if include_traceback:
+            errors.append(traceback.format_exc())
+        return result_envelope(
+            "cdfl_ast",
+            f"cdfd cdfl ast {model_path}",
+            {"file": str(model_path), "valid": False},
+            status="error",
+            errors=errors,
+        )
+
+
+def cdfl_sample(*, output_path: str | Path | None = None, force: bool = False) -> dict[str, Any]:
+    output = Path(output_path) if output_path else None
+    try:
+        if output and output.exists() and not force:
+            return result_envelope(
+                "cdfl_sample",
+                "cdfd cdfl sample",
+                {"output": str(output), "written": False, "sample": CANONICAL_HEAT_FLOW},
+                status="error",
+                errors=[f"{output} already exists; pass --force to overwrite it."],
+            )
+        if output:
+            output.parent.mkdir(parents=True, exist_ok=True)
+            output.write_text(CANONICAL_HEAT_FLOW)
+        return result_envelope(
+            "cdfl_sample",
+            "cdfd cdfl sample",
+            {"output": str(output) if output else None, "written": bool(output), "sample": CANONICAL_HEAT_FLOW},
+        )
+    except Exception as exc:
+        return result_envelope(
+            "cdfl_sample",
+            "cdfd cdfl sample",
+            {"output": str(output) if output else None, "written": False, "sample": CANONICAL_HEAT_FLOW},
+            status="error",
+            errors=[str(exc)],
+        )
+
+
+def run_cdfl(
+    path: str | Path,
+    *,
+    nx: int = 16,
+    ny: int = 16,
+    include_traceback: bool = False,
+    command: str | None = None,
+) -> dict[str, Any]:
+    model_path = Path(path)
+    command_label = command or f"cdfd run {model_path}"
     try:
         _tokens, nodes = compile_cdfl(model_path)
         executor = Executor(nx=nx, ny=ny)
         results = executor.execute(nodes)
         return result_envelope(
             "cdfl_run",
-            f"cdfd run {model_path}",
+            command_label,
             {
                 "file": str(model_path),
                 "nx": nx,
@@ -427,7 +596,7 @@ def run_cdfl(path: str | Path, *, nx: int = 16, ny: int = 16, include_traceback:
             errors.append(traceback.format_exc())
         return result_envelope(
             "cdfl_run",
-            f"cdfd run {model_path}",
+            command_label,
             {"file": str(model_path), "nx": nx, "ny": ny},
             status="error",
             errors=errors,

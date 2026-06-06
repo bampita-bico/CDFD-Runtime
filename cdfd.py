@@ -12,11 +12,15 @@ from runtime.diagnostics import clean_json, write_json
 from runtime.reporting import result_to_html, result_to_markdown
 from runtime.runner import (
     app_auth_status,
+    cdfl_ast,
+    cdfl_sample,
     compare_domain,
     doctor,
     explain_result,
     export_result,
+    format_cdfl_file,
     gallery,
+    lint_cdfl,
     list_domains,
     load_json_object,
     llm_explain_result,
@@ -47,6 +51,10 @@ CLI-first workflow:
   python cdfd.py demo physics --steps 1 --nx 4 --ny 4
   python cdfd.py demo origins_of_life --source-scenario mixed_source_surface_trap
   python cdfd.py diagnostics
+  python cdfd.py cdfl lint examples/heat_flow.cdfl
+  python cdfd.py cdfl format examples/heat_flow.cdfl
+  python cdfd.py cdfl ast examples/heat_flow.cdfl --json
+  python cdfd.py cdfl sample --out /tmp/heat_flow.cdfl
   python cdfd.py validate examples/heat_flow.cdfl
   python cdfd.py run examples/heat_flow.cdfl --nx 4 --ny 4 --out outputs/run.json
 
@@ -159,6 +167,36 @@ def _print_human(result: dict, *, out: str | None = None) -> None:
         print(f"valid: {payload.get('valid')}")
         if payload.get("node_count") is not None:
             print(f"nodes: {payload.get('node_count')} ({', '.join(payload.get('nodes', []))})")
+        _print_cdfl_diagnostics(payload)
+    elif kind == "cdfl_lint":
+        print(f"status: {status}")
+        print(f"file: {payload.get('file')}")
+        print(f"valid: {payload.get('valid')}")
+        print(f"tokens: {payload.get('token_count')} nodes: {payload.get('node_count')}")
+        _print_cdfl_diagnostics(payload)
+    elif kind == "cdfl_format":
+        print(f"status: {status}")
+        print(f"file: {payload.get('file')}")
+        print(f"changed: {payload.get('changed')}")
+        if payload.get("output"):
+            print(f"output: {payload.get('output')}")
+        elif payload.get("formatted"):
+            print(payload["formatted"])
+    elif kind == "cdfl_ast":
+        print(f"status: {status}")
+        print(f"file: {payload.get('file')}")
+        print(f"valid: {payload.get('valid')}")
+        print(f"tokens: {payload.get('token_count')} nodes: {payload.get('node_count')}")
+        for index, node in enumerate(payload.get("nodes", []), start=1):
+            print(f"{index}. {node.get('type')}: {json.dumps(clean_json(node.get('attributes', {})), sort_keys=True)}")
+        _print_cdfl_diagnostics(payload)
+    elif kind == "cdfl_sample":
+        print(f"status: {status}")
+        if payload.get("output"):
+            print(f"output: {payload.get('output')}")
+            print(f"written: {payload.get('written')}")
+        else:
+            print(payload.get("sample", ""))
     elif kind == "cdfl_run":
         print(f"status: {status}")
         print(f"file: {payload.get('file')}")
@@ -297,6 +335,24 @@ def _add_run_bundle_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--runs-root", default="runs", help="Run bundle root directory")
 
 
+def _print_cdfl_diagnostics(payload: dict) -> None:
+    summary = payload.get("diagnostic_summary") or {}
+    if summary:
+        print(
+            "diagnostics: "
+            f"{summary.get('error', 0)} errors, "
+            f"{summary.get('warning', 0)} warnings, "
+            f"{summary.get('info', 0)} info"
+        )
+    for item in payload.get("diagnostics", [])[:12]:
+        print(
+            f"- {item.get('severity')}: "
+            f"{item.get('code')} "
+            f"line={item.get('line')} col={item.get('column')}: "
+            f"{item.get('message')}"
+        )
+
+
 def _add_llm_provider_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--provider",
@@ -400,6 +456,49 @@ def build_parser() -> argparse.ArgumentParser:
     _add_format_args(simulate_p)
     _add_run_bundle_args(simulate_p)
     simulate_p.add_argument("--traceback", action="store_true", help="Show full traceback on error")
+
+    cdfl_p = sub.add_parser("cdfl", help="CDFL language workbench commands")
+    cdfl_sub = cdfl_p.add_subparsers(dest="cdfl_command", required=True)
+
+    cdfl_validate_p = cdfl_sub.add_parser("validate", help="Parse and validate a CDFL model")
+    cdfl_validate_p.add_argument("model", help="Path to .cdfl model")
+    _add_format_args(cdfl_validate_p)
+    _add_run_bundle_args(cdfl_validate_p)
+    cdfl_validate_p.add_argument("--traceback", action="store_true", help="Show full traceback on error")
+
+    cdfl_run_p = cdfl_sub.add_parser("run", help="Run a CDFL model")
+    cdfl_run_p.add_argument("model", help="Path to .cdfl model")
+    cdfl_run_p.add_argument("--nx", type=int, default=16)
+    cdfl_run_p.add_argument("--ny", type=int, default=16)
+    _add_format_args(cdfl_run_p)
+    _add_run_bundle_args(cdfl_run_p)
+    cdfl_run_p.add_argument("--traceback", action="store_true", help="Show full traceback on error")
+
+    cdfl_lint_p = cdfl_sub.add_parser("lint", help="Lint a CDFL model and report editor-grade diagnostics")
+    cdfl_lint_p.add_argument("model", help="Path to .cdfl model")
+    _add_format_args(cdfl_lint_p)
+    _add_run_bundle_args(cdfl_lint_p)
+    cdfl_lint_p.add_argument("--traceback", action="store_true", help="Show full traceback on error")
+
+    cdfl_format_p = cdfl_sub.add_parser("format", help="Format a CDFL model")
+    cdfl_format_p.add_argument("model", help="Path to .cdfl model")
+    cdfl_format_p.add_argument("--out", dest="output_path", help="Write formatted CDFL to a file")
+    cdfl_format_p.add_argument("--in-place", action="store_true", help="Rewrite the input file with formatted CDFL")
+    cdfl_format_p.add_argument("--indent-size", type=int, default=2, help="Spaces per indentation level")
+    cdfl_format_p.add_argument("--format", choices=CLI_FORMATS, default="table", help="Output format for the command envelope")
+    cdfl_format_p.add_argument("--json", action="store_true", help="Shortcut for --format json")
+
+    cdfl_ast_p = cdfl_sub.add_parser("ast", help="Emit a JSON-safe CDFL AST summary")
+    cdfl_ast_p.add_argument("model", help="Path to .cdfl model")
+    _add_format_args(cdfl_ast_p)
+    _add_run_bundle_args(cdfl_ast_p)
+    cdfl_ast_p.add_argument("--traceback", action="store_true", help="Show full traceback on error")
+
+    cdfl_sample_p = cdfl_sub.add_parser("sample", help="Print or write the canonical heat-flow CDFL sample")
+    cdfl_sample_p.add_argument("--out", dest="output_path", help="Write sample CDFL to a file")
+    cdfl_sample_p.add_argument("--force", action="store_true", help="Overwrite --out if it already exists")
+    cdfl_sample_p.add_argument("--format", choices=CLI_FORMATS, default="table", help="Output format for the command envelope")
+    cdfl_sample_p.add_argument("--json", action="store_true", help="Shortcut for --format json")
 
     export_p = sub.add_parser("export", help="Export a saved CLI result")
     export_p.add_argument("input", help="Input JSON result")
@@ -560,6 +659,53 @@ def main(argv: list[str] | None = None) -> int:
             args,
             run_label="run",
         )
+
+    if args.command == "cdfl":
+        if args.cdfl_command == "validate":
+            return _emit_from_args(
+                validate_cdfl(
+                    args.model,
+                    include_traceback=args.traceback,
+                    command=f"cdfd cdfl validate {args.model}",
+                ),
+                args,
+                run_label="cdfl-validate",
+            )
+        if args.cdfl_command == "run":
+            return _emit_from_args(
+                run_cdfl(
+                    args.model,
+                    nx=args.nx,
+                    ny=args.ny,
+                    include_traceback=args.traceback,
+                    command=f"cdfd cdfl run {args.model}",
+                ),
+                args,
+                run_label="cdfl-run",
+            )
+        if args.cdfl_command == "lint":
+            return _emit_from_args(
+                lint_cdfl(args.model, include_traceback=args.traceback),
+                args,
+                run_label="cdfl-lint",
+            )
+        if args.cdfl_command == "format":
+            result = format_cdfl_file(
+                args.model,
+                output_path=args.output_path,
+                in_place=args.in_place,
+                indent_size=args.indent_size,
+            )
+            return _emit(result, json_mode=args.json, out=None, fmt=_selected_format(args))
+        if args.cdfl_command == "ast":
+            return _emit_from_args(
+                cdfl_ast(args.model, include_traceback=args.traceback),
+                args,
+                run_label="cdfl-ast",
+            )
+        if args.cdfl_command == "sample":
+            result = cdfl_sample(output_path=args.output_path, force=args.force)
+            return _emit(result, json_mode=args.json, out=None, fmt=_selected_format(args))
 
     if args.command == "export":
         result = export_result(Path(args.input), output_path=args.out, fmt=args.format)

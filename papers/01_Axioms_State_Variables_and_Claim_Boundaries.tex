@@ -19,7 +19,7 @@
 \small Founder, Vura Labs\\
 \small Kampala, Uganda\\
 \small ORCID: \href{https://orcid.org/0009-0001-0556-5516}{0009-0001-0556-5516}}
-\date{May 2026}
+\date{June 2026}
 
 \begin{document}
 \maketitle
@@ -135,9 +135,13 @@ lives primarily in \texttt{engine/physics.py}; shared finite checks, JSON-safe
 summaries, the scalar operating ratio, the Life Number, and bounded diagnostic
 helpers live in \texttt{runtime/diagnostics.py}. The command surface is exposed
 through \texttt{cdfd.py} (\texttt{info}, \texttt{domains}, \texttt{demo},
-\texttt{diagnostics}, \texttt{validate}, \texttt{run}, \texttt{export},
-\texttt{auth}), while CDFL models provide a readable way to define systems and
-rules. \texttt{cdfd.py diagnostics} writes
+\texttt{diagnostics}, \texttt{cdfl}, \texttt{validate}, \texttt{run},
+\texttt{gallery}, \texttt{compare}, \texttt{report}, \texttt{explain},
+\texttt{llm}, \texttt{export}, \texttt{auth}), while CDFL models provide a
+readable way to define systems and rules. The \texttt{cdfl} subcommand adds
+language-facing validation, linting, formatting, AST summaries, and sample
+generation without changing the engine equations. \texttt{cdfd.py diagnostics}
+writes
 \texttt{experiments/outputs/part\_ii\_runtime\_diagnostics.json} with guarded
 Part II source-mix and endpoint status rows.
 

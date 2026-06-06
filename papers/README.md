@@ -1,9 +1,10 @@
 # CDFD Runtime Papers
 
 This folder contains the active 12-paper runtime spine. The papers were upgraded
-in May 2026 to align with the current CLI-first runtime, CDFL command surface,
-local discovery experiments, Part I/II citations, schematic figures, and stricter
-claim discipline.
+in May 2026 and refreshed in June 2026 to align with the current CLI-first
+runtime, CDFL workbench commands, VS Code language-support surface, optional
+Runtime Studio, local discovery experiments, Part I/II citations, schematic
+figures, and stricter claim discipline.
 
 Runtime software DOI: https://doi.org/10.5281/zenodo.20343160
 
@@ -52,8 +53,9 @@ schematic and prior-work references.
 
 ## Sync with the codebase
 
-See `RUNTIME_PAPER_SYNC.md` for the May 2026 alignment checklist (CLI commands,
-Part II diagnostics, domain count, tests, optional web studio).
+See `RUNTIME_PAPER_SYNC.md` for the May-June 2026 alignment checklist (CLI
+commands, CDFL tooling, Part II diagnostics, domain count, tests, optional web
+studio, VS Code extension, and provider boundary).
 
 ## Build
 

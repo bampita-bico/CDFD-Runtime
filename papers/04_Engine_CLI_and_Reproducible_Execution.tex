@@ -12,7 +12,7 @@
 \small Founder, Vura Labs\\
 \small Kampala, Uganda\\
 \small ORCID: \href{https://orcid.org/0009-0001-0556-5516}{0009-0001-0556-5516}}
-\date{May 2026}
+\date{June 2026}
 
 \begin{document}
 \maketitle
@@ -24,8 +24,9 @@ arrays in \texttt{engine/state.py}, physics and domain updates under
 \texttt{engine/}, domain adapters under \texttt{domains/}, CDFL under
 \texttt{dsl/}, shared command logic under \texttt{runtime/runner.py}, and the
 CLI entrypoint \texttt{cdfd.py}. The CLI is the first serious interface because
-it supports reproducible simulations, paper diagnostics, validation, export,
-and automation before the web application is expanded.
+it supports reproducible simulations, paper diagnostics, CDFL language tooling,
+validation, export, reports, optional provider interpretation above saved
+outputs, and automation before any visual layer is treated as authoritative.
 \end{abstract}
 
 \paragraph{Greek-symbol convention.}
@@ -95,12 +96,19 @@ python cdfd.py diagnostics
 python cdfd.py demo physics --steps 4 --nx 8 --ny 8 --json
 python cdfd.py demo origins_of_life \
   --source-scenario mixed_source_surface_trap
+python cdfd.py cdfl lint examples/heat_flow.cdfl
+python cdfd.py cdfl format examples/heat_flow.cdfl
+python cdfd.py cdfl ast examples/heat_flow.cdfl --json
 python cdfd.py validate examples/heat_flow.cdfl
 python cdfd.py run examples/heat_flow.cdfl \
   --out outputs/heat_flow_run.json
+python cdfd.py gallery --save-run
+python cdfd.py report runs/<run>/result.json --format html
+python cdfd.py explain runs/<run>/result.json --format markdown
+python cdfd.py llm providers --json
+python cdfd.py llm explain runs/<run>/result.json --dry-run
 python cdfd.py export outputs/heat_flow_run.json \
   --out outputs/heat_flow_export.json
-python cdfd.py auth --api-key-file app_key.txt --json
 \end{verbatim}
 
 The CLI calls \texttt{runtime/runner.py}. Domain demos return per-step traces and
@@ -109,13 +117,21 @@ Streamlit layer (\texttt{python -m webapp.run\_server}) reads the same backend;
 \texttt{webapp/neo4j\_ontology.py} is kept separate from the \texttt{ontology/}
 package to avoid import shadowing.
 
-\section{Application Credentials}
-The final CLI surface includes an app-auth boundary. A calling product can pass
-an API key directly, through a key file, or through an environment variable.
-The runtime never stores the raw key in output. It records only whether the key
-matched the configured allowlist and, when a key is supplied, a short redacted
-fingerprint for audit. This gives VOS and future apps a practical gate while
-keeping LLM credentials and user-workflow policy out of the engine.
+\section{Optional Provider Boundary}
+The current CLI includes \texttt{cdfd.py llm} commands for research
+interpretation of saved deterministic outputs. This layer is optional and sits
+above the engine. \texttt{cdfd.py llm providers} lists the supported provider
+shapes; \texttt{cdfd.py llm status} checks whether a provider key is configured
+without making a provider call; \texttt{cdfd.py llm explain ... --dry-run}
+builds a prompt audit without contacting a provider. A real provider call is
+made only when \texttt{llm explain} is invoked without \texttt{--dry-run} and a
+provider, model, base URL, and key state support the call.
+
+Raw provider keys are never printed in result envelopes or reports. The
+compatibility command \texttt{cdfd.py auth} is now an alias for provider-key
+status, not a local runtime allowlist. The deterministic engine remains
+independent of LLM routing; provider adapters live in the runtime/application
+boundary and interpret already-saved outputs.
 
 \section{Reproducible Output Contract}
 Every serious command returns:
@@ -148,15 +164,19 @@ selects which outputs are suitable for public mention and how cautiously they
 are framed.
 
 \section{Current Verification}
-The CLI/runtime upgrade pass was checked with:
+The June 2026 CLI/runtime/editor upgrade pass was checked with:
 \begin{verbatim}
 python -m pytest -q tests/test_cli_runtime.py \
-  tests/test_new_engine_upgrades.py
+  tests/test_release_surfaces.py \
+  tests/test_cdfl_vscode_extension.py
+python cdfd.py doctor --json
+python cdfd.py gallery --steps 1 --nx 4 --ny 4 --json
 \end{verbatim}
-The recorded result was 15 passing runtime and native-engine tests. This is
-not full validation of the CDFD theory; it is evidence that the command backend,
-CDFL example, Part II diagnostics, domain traces, and selected native engine
-upgrades execute coherently.
+The recorded focused result was 38 passing tests, \texttt{doctor} reported
+11 ok checks, and \texttt{gallery} returned an ok finite-audited envelope. This
+is not full validation of the CDFD theory; it is evidence that the command
+backend, CDFL example, CDFL workbench tooling, Part II diagnostics, domain
+traces, packaging surfaces, and VS Code extension metadata execute coherently.
 
 \section{Conclusion}
 The CDFD Runtime is becoming a reproducible scientific instrument rather than

@@ -24,6 +24,7 @@ streamlit run webapp/dashboard.py
 | Tab | Content |
 |-----|---------|
 | **Runtime Cockpit** | Runtime status, domain count, selected run, finite audit, doctor checks, provenance |
+| **CDFL Workbench** | CDFL editor, runtime validation, lint diagnostics, run, formatter, AST summary, JSON/Markdown/HTML exports |
 | **Physics Lab** | Kernel runs with interactive Ψ_s trajectory, phase-space trace, replay snapshots, and PNG/SVG/HTML exports |
 | **Origins Lab** | Source-mix comparison, Life Number map, photochemical guardrails, Part II diagnostic envelopes |
 | **Domain Atlas** | Searchable domain map, field filters, adapter run controls, side-by-side domain demos |

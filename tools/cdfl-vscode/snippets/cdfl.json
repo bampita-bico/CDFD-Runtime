@@ -1,0 +1,117 @@
+{
+  "SET domain": {
+    "prefix": "set",
+    "body": [
+      "SET domain: ${1:physics}"
+    ],
+    "description": "Set the CDFL execution domain."
+  },
+  "SYSTEM block": {
+    "prefix": "system",
+    "body": [
+      "SYSTEM ${1:Name} {",
+      "  flux: ${2:1.2}",
+      "  constraint: ${3:0.9}",
+      "  state: ${4:psi}",
+      "}"
+    ],
+    "description": "Define a CDFL system block."
+  },
+  "RULE block": {
+    "prefix": "rule",
+    "body": [
+      "RULE ${1:Name} {",
+      "  IF ${2:psi} > ${3:1.1}",
+      "  ACTION ${4:reduce_flux}",
+      "}"
+    ],
+    "description": "Define a CDFL rule block."
+  },
+  "RUN Engine": {
+    "prefix": "run",
+    "body": [
+      "RUN Engine {",
+      "  duration: ${1:0.05}",
+      "  dt: ${2:0.01}",
+      "}"
+    ],
+    "description": "Run the CDFD engine with duration and time-step parameters."
+  },
+  "OBSERVE metrics": {
+    "prefix": "observe",
+    "body": [
+      "OBSERVE {",
+      "  metrics: [${1:psi}]",
+      "}"
+    ],
+    "description": "Observe one or more CDFL metrics."
+  },
+  "SCENARIO block": {
+    "prefix": "scenario",
+    "body": [
+      "SCENARIO ${1:Name} {",
+      "  SET domain: ${2:physics}",
+      "  RUN Engine {",
+      "    duration: ${3:0.05}",
+      "    dt: ${4:0.01}",
+      "  }",
+      "}"
+    ],
+    "description": "Group CDFL statements into a scenario."
+  },
+  "SWEEP list": {
+    "prefix": "sweep",
+    "body": [
+      "SWEEP ${1:parameter} [${2:0.8}, ${3:1.0}, ${4:1.2}]"
+    ],
+    "description": "Sweep a CDFL parameter across a list of values."
+  },
+  "DISCOVER block": {
+    "prefix": "discover",
+    "body": [
+      "DISCOVER {",
+      "  target: ${1:regime_boundary}",
+      "  resolution: ${2:8}",
+      "}"
+    ],
+    "description": "Create a CDFL discovery block."
+  },
+  "ANALYZE block": {
+    "prefix": "analyze",
+    "body": [
+      "ANALYZE {",
+      "  target: ${1:system_state}",
+      "}"
+    ],
+    "description": "Create a CDFL analysis block."
+  },
+  "BIFURCATE block": {
+    "prefix": "bifurcate",
+    "body": [
+      "BIFURCATE {",
+      "  param_a: ${1:alpha}",
+      "  param_b: ${2:beta}",
+      "  resolution: ${3:6}",
+      "}"
+    ],
+    "description": "Create a CDFL bifurcation analysis block."
+  },
+  "ATTRACTOR block": {
+    "prefix": "attractor",
+    "body": [
+      "ATTRACTOR {",
+      "  target: ${1:psi}",
+      "}"
+    ],
+    "description": "Create a CDFL attractor analysis block."
+  },
+  "INFOFLOW block": {
+    "prefix": "infoflow",
+    "body": [
+      "INFOFLOW {",
+      "  metrics: [${1:psi}]",
+      "}"
+    ],
+    "description": "Create a CDFL information-flow analysis block."
+  }
+}

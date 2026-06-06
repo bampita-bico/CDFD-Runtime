@@ -1,0 +1,229 @@
+{
+  "name": "cdfl-language-support",
+  "displayName": "CDFL Language Support",
+  "description": "Editor intelligence and runtime commands for the Constraint-Driven Flux Language used by CDFD Runtime.",
+  "version": "0.1.0",
+  "publisher": "VuraLabs",
+  "license": "AGPL-3.0-or-later",
+  "icon": "assets/icon.png",
+  "main": "./extension.js",
+  "activationEvents": [
+    "onLanguage:cdfl",
+    "onCommand:cdfl.validateCurrentFile",
+    "onCommand:cdfl.runCurrentFile",
+    "onCommand:cdfl.lintCurrentFile",
+    "onCommand:cdfl.showAst",
+    "onCommand:cdfl.formatViaRuntime",
+    "onCommand:cdfl.doctor",
+    "onCommand:cdfl.openLanguageReference",
+    "onCommand:cdfl.createHeatFlowSample"
+  ],
+  "homepage": "https://github.com/bampita-bico/CDFD-Runtime/tree/main/tools/cdfl-vscode",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bampita-bico/CDFD-Runtime.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bampita-bico/CDFD-Runtime/issues"
+  },
+  "engines": {
+    "vscode": "^1.84.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Snippets"
+  ],
+  "keywords": [
+    "CDFL",
+    "CDFD",
+    "constraint-driven flux dynamics",
+    "syntax highlighting",
+    "snippets"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "cdfl",
+        "aliases": [
+          "CDFL",
+          "Constraint-Driven Flux Language"
+        ],
+        "extensions": [
+          ".cdfl"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "cdfl",
+        "scopeName": "source.cdfl",
+        "path": "./syntaxes/cdfl.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "cdfl",
+        "path": "./snippets/cdfl.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "cdfl.validateCurrentFile",
+        "title": "Validate Current File",
+        "category": "CDFL"
+      },
+      {
+        "command": "cdfl.runCurrentFile",
+        "title": "Run Current File",
+        "category": "CDFL"
+      },
+      {
+        "command": "cdfl.lintCurrentFile",
+        "title": "Lint Current File",
+        "category": "CDFL"
+      },
+      {
+        "command": "cdfl.showAst",
+        "title": "Show AST",
+        "category": "CDFL"
+      },
+      {
+        "command": "cdfl.formatViaRuntime",
+        "title": "Format with Runtime",
+        "category": "CDFL"
+      },
+      {
+        "command": "cdfl.doctor",
+        "title": "Runtime Doctor",
+        "category": "CDFL"
+      },
+      {
+        "command": "cdfl.openLanguageReference",
+        "title": "Open Language Reference",
+        "category": "CDFL"
+      },
+      {
+        "command": "cdfl.createHeatFlowSample",
+        "title": "Create Heat Flow Sample",
+        "category": "CDFL"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "cdfl.validateCurrentFile",
+          "when": "editorLangId == cdfl"
+        },
+        {
+          "command": "cdfl.runCurrentFile",
+          "when": "editorLangId == cdfl"
+        },
+        {
+          "command": "cdfl.lintCurrentFile",
+          "when": "editorLangId == cdfl"
+        },
+        {
+          "command": "cdfl.showAst",
+          "when": "editorLangId == cdfl"
+        },
+        {
+          "command": "cdfl.formatViaRuntime",
+          "when": "editorLangId == cdfl"
+        },
+        {
+          "command": "cdfl.doctor"
+        },
+        {
+          "command": "cdfl.openLanguageReference"
+        },
+        {
+          "command": "cdfl.createHeatFlowSample"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "cdfl.validateCurrentFile",
+          "when": "resourceLangId == cdfl",
+          "group": "navigation"
+        },
+        {
+          "command": "cdfl.runCurrentFile",
+          "when": "resourceLangId == cdfl",
+          "group": "navigation"
+        },
+        {
+          "command": "cdfl.lintCurrentFile",
+          "when": "resourceLangId == cdfl",
+          "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "cdfl.validateCurrentFile",
+          "when": "resourceLangId == cdfl",
+          "group": "cdfd"
+        },
+        {
+          "command": "cdfl.runCurrentFile",
+          "when": "resourceLangId == cdfl",
+          "group": "cdfd"
+        },
+        {
+          "command": "cdfl.lintCurrentFile",
+          "when": "resourceLangId == cdfl",
+          "group": "cdfd"
+        },
+        {
+          "command": "cdfl.showAst",
+          "when": "resourceLangId == cdfl",
+          "group": "cdfd"
+        },
+        {
+          "command": "cdfl.formatViaRuntime",
+          "when": "resourceLangId == cdfl",
+          "group": "cdfd"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "CDFL",
+      "properties": {
+        "cdfl.diagnostics.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable local CDFL editor diagnostics."
+        },
+        "cdfl.format.indentSize": {
+          "type": "number",
+          "default": 2,
+          "minimum": 0,
+          "maximum": 8,
+          "description": "Spaces used by the CDFL formatter for each indentation level."
+        },
+        "cdfl.runtime.command": {
+          "type": "string",
+          "default": "",
+          "description": "Optional runtime command prefix, for example `cdfd` or `python /path/to/cdfd.py`. Leave empty for auto-detection."
+        },
+        "cdfl.runtime.cwd": {
+          "type": "string",
+          "default": "",
+          "description": "Optional CDFD Runtime working directory. Leave empty for auto-detection."
+        },
+        "cdfl.run.nx": {
+          "type": "number",
+          "default": 16,
+          "minimum": 1,
+          "description": "Grid x dimension used by CDFL: Run Current File."
+        },
+        "cdfl.run.ny": {
+          "type": "number",
+          "default": 16,
+          "minimum": 1,
+          "description": "Grid y dimension used by CDFL: Run Current File."
+        }
+      }
+    }
+  }
+}

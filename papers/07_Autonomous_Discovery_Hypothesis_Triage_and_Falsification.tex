@@ -12,7 +12,7 @@
 \small Founder, Vura Labs\\
 \small Kampala, Uganda\\
 \small ORCID: \href{https://orcid.org/0009-0001-0556-5516}{0009-0001-0556-5516}}
-\date{May 2026}
+\date{June 2026}
 
 \begin{document}
 \maketitle
@@ -122,8 +122,10 @@ and a safety test, not as an application success.
 \texttt{engine/causal\_graph.py} builds Granger-style directed edges from
 simulation time series without an LLM. The CLI and optional web studio can
 present these edges as triage hints: which series preceded which under the
-current model. A persistent edge after decoupling controls remains an artifact,
-not a discovery.
+current model. Optional LLM provider calls may later summarize a saved result,
+but they do not create the edge, alter the finite audit, or turn a candidate
+edge into validation. A persistent edge after decoupling controls remains an
+artifact, not a discovery.
 
 \section{Frontier and Gigamarathon Sweeps}
 \texttt{experiments/outputs/frontier\_sweep.h5} summarizes 2,500 parameter

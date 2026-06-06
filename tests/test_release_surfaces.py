@@ -68,3 +68,6 @@ def test_webapp_is_documented_as_optional_release_surface():
     readme = (ROOT / "README.md").read_text()
     assert "python -m webapp.run_server" in readme
     assert ".[web]" in readme
+    assert "CDFL Workbench" in (ROOT / "webapp" / "dashboard.py").read_text()
+    assert "CDFL Workbench" in (ROOT / "webapp" / "README.md").read_text()
+    assert "cdfd cdfl lint" in readme

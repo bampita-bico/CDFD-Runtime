@@ -1,6 +1,6 @@
 {
   "title": "CDFD Runtime: Constraint-Driven Flux Dynamics and CDFL Execution Engine",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "doi": "10.5281/zenodo.20343160",
   "creators": [
     {
@@ -20,6 +20,8 @@
     "structural memory",
     "domain adapters",
     "ontology runtime",
+    "runtime studio",
+    "VS Code language support",
     "deterministic execution",
     "finite audit",
     "scientific computing",
@@ -50,5 +52,5 @@
       "scheme": "doi"
     }
   ],
-  "description": "Public command-line runtime for Constraint-Driven Flux Dynamics and CDFL. The release includes deterministic CLI execution, the CDFL parser and executor, runtime finite-audit helpers, domain adapters, ontology execution, curated public experiments, a 12-paper runtime spine, compiled PDFs, and tests. Outputs are model diagnostics and falsification targets, not empirical proof or deployed decision systems."
+  "description": "Public command-line runtime for Constraint-Driven Flux Dynamics and CDFL. The release includes deterministic CLI execution, the CDFL parser and executor, CDFL lint/format/AST tooling, runtime finite-audit helpers, domain adapters, ontology execution, optional Runtime Studio, VS Code CDFL language support, curated public experiments, a 12-paper runtime spine, compiled PDFs, and tests. Outputs are model diagnostics and falsification targets, not empirical proof or deployed decision systems."
 }
