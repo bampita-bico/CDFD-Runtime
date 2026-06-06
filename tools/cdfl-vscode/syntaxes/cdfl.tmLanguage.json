@@ -1,0 +1,160 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "CDFL",
+  "scopeName": "source.cdfl",
+  "fileTypes": [
+    "cdfl"
+  ],
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#numbers"
+    },
+    {
+      "include": "#blockNames"
+    },
+    {
+      "include": "#keys"
+    },
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#types"
+    },
+    {
+      "include": "#operators"
+    },
+    {
+      "include": "#punctuation"
+    },
+    {
+      "include": "#identifiers"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.number-sign.cdfl",
+          "match": "#.*$"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.cdfl",
+          "begin": "\"",
+          "end": "\""
+        },
+        {
+          "name": "string.quoted.single.cdfl",
+          "begin": "'",
+          "end": "'"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.cdfl",
+          "match": "(?<![A-Za-z0-9_.])\\d+(?:\\.\\d+)?(?![A-Za-z0-9_.])"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.cdfl",
+          "match": "(?<![A-Za-z0-9_.\\x{0370}-\\x{03FF}])(?:DEFINE|SET|LINK|RUN|SCENARIO|OBSERVE|SWEEP|DISCOVER|PATIENT|APPLY|TO|MODIFY|ANALYZE|BIFURCATE|EMERGE|ATTRACTOR|INFOFLOW|VACUUM|KNOT|SPAWN|RESOLVE|SPECTRUM|SYSTEM|RULE|IF|ACTION)(?![A-Za-z0-9_.\\x{0370}-\\x{03FF}])"
+        }
+      ]
+    },
+    "blockNames": {
+      "patterns": [
+        {
+          "name": "meta.definition.block.cdfl",
+          "match": "(?<![A-Za-z0-9_.\\x{0370}-\\x{03FF}])(SYSTEM|RULE|SCENARIO|PATIENT)\\s+([A-Za-z_\\x{0370}-\\x{03FF}][A-Za-z0-9_.\\x{0370}-\\x{03FF}]*)",
+          "captures": {
+            "1": {
+              "name": "keyword.control.cdfl"
+            },
+            "2": {
+              "name": "entity.name.type.cdfl"
+            }
+          }
+        }
+      ]
+    },
+    "keys": {
+      "patterns": [
+        {
+          "name": "variable.parameter.key.cdfl",
+          "match": "(?<![A-Za-z0-9_.\\x{0370}-\\x{03FF}])[A-Za-z_\\x{0370}-\\x{03FF}][A-Za-z0-9_.\\x{0370}-\\x{03FF}]*(?=\\s*:)"
+        }
+      ]
+    },
+    "types": {
+      "patterns": [
+        {
+          "name": "support.type.cdfl",
+          "match": "(?<![A-Za-z0-9_.\\x{0370}-\\x{03FF}])(?:Engine|Field|Constraint|Vacuum|Knot|Spectrum)(?![A-Za-z0-9_.\\x{0370}-\\x{03FF}])"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.comparison.cdfl",
+          "match": ">=|<=|==|!=|>|<"
+        },
+        {
+          "name": "keyword.operator.arithmetic.cdfl",
+          "match": "[=+\\-*/]"
+        }
+      ]
+    },
+    "punctuation": {
+      "patterns": [
+        {
+          "name": "punctuation.section.block.begin.cdfl",
+          "match": "\\{"
+        },
+        {
+          "name": "punctuation.section.block.end.cdfl",
+          "match": "\\}"
+        },
+        {
+          "name": "punctuation.section.sequence.begin.cdfl",
+          "match": "\\["
+        },
+        {
+          "name": "punctuation.section.sequence.end.cdfl",
+          "match": "\\]"
+        },
+        {
+          "name": "punctuation.separator.key-value.cdfl",
+          "match": ":"
+        },
+        {
+          "name": "punctuation.separator.sequence.cdfl",
+          "match": ","
+        }
+      ]
+    },
+    "identifiers": {
+      "patterns": [
+        {
+          "name": "variable.other.identifier.cdfl",
+          "match": "(?<![A-Za-z0-9_.\\x{0370}-\\x{03FF}])[A-Za-z_\\x{0370}-\\x{03FF}][A-Za-z0-9_.\\x{0370}-\\x{03FF}]*(?![A-Za-z0-9_.\\x{0370}-\\x{03FF}])"
+        }
+      ]
+    }
+  }
+}

@@ -13,6 +13,10 @@ cdfd gallery --save-run --json --out outputs/gallery.json
 cdfd compare origins_of_life --scenarios mixed_source_surface_trap meteoritic_seed_retained --json
 cdfd report outputs/gallery.json --format markdown --out outputs/gallery_report.md
 cdfd explain outputs/gallery.json --format markdown --out outputs/gallery_explain.md
+cdfd cdfl lint examples/heat_flow.cdfl --json
+cdfd cdfl format examples/heat_flow.cdfl --json
+cdfd cdfl ast examples/heat_flow.cdfl --json
+cdfd cdfl sample --out /tmp/heat_flow.cdfl
 cdfd llm providers --json
 cdfd llm status --provider openai --model <model> --json
 cdfd llm explain outputs/gallery.json --provider openai --model <model> --dry-run
@@ -45,6 +49,10 @@ The CLI delegates to `runtime.runner`:
 - `run_domain(domain, payload=None, nx=16, ny=16, steps=24, dt=None)`
 - `validate_cdfl(path)`
 - `run_cdfl(path, nx=16, ny=16)`
+- `lint_cdfl(path)`
+- `format_cdfl_file(path, output_path=None, in_place=False, indent_size=2)`
+- `cdfl_ast(path)`
+- `cdfl_sample(output_path=None, force=False)`
 - `report_result(input_path, output_path=None, fmt="markdown")`
 - `explain_result(input_path, output_path=None, fmt="markdown")`
 - `llm_provider_inventory()`

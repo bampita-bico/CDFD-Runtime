@@ -2,6 +2,7 @@ import re
 from dsl.tokens import Token, TokenType, KEYWORDS
 
 _PATTERNS = [
+    (r'#[^\r\n]*',          None),
     (r'"[^"]*"',           TokenType.STRING),
     (r"'[^']*'",           TokenType.STRING),
     (r'\d+\.\d+',          TokenType.NUMBER),
@@ -27,6 +28,8 @@ def tokenize(code):
         group = m.lastgroup
         value = m.group()
         ttype = _TYPE_MAP[group]
+        if ttype is None:
+            continue
         if ttype == TokenType.IDENTIFIER and value in KEYWORDS:
             ttype = TokenType.KEYWORD
         if ttype == TokenType.NUMBER:

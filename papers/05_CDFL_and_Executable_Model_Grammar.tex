@@ -12,7 +12,7 @@
 \small Founder, Vura Labs\\
 \small Kampala, Uganda\\
 \small ORCID: \href{https://orcid.org/0009-0001-0556-5516}{0009-0001-0556-5516}}
-\date{May 2026}
+\date{June 2026}
 
 \begin{document}
 \maketitle
@@ -22,8 +22,9 @@
 Runtime. It lets a user define systems, assign domains, run simulations, observe
 metrics, and trigger rules without writing Python directly. This paper explains
 the compiler path and the CLI contract that now makes CDFL reproducible through
-\texttt{cdfd.py validate}, \texttt{cdfd.py run}, \texttt{cdfd.py diagnostics},
-and JSON export.
+\texttt{cdfd.py cdfl validate}, \texttt{cdfd.py cdfl lint},
+\texttt{cdfd.py cdfl format}, \texttt{cdfd.py cdfl ast},
+\texttt{cdfd.py cdfl sample}, execution, diagnostics, and JSON export.
 \end{abstract}
 
 \paragraph{Greek-symbol convention.}
@@ -61,7 +62,9 @@ same model can be reviewed by another reader. CDFL provides that grammar.
 \subsection{Tokenization}
 \texttt{dsl/lexer.py} and \texttt{dsl/tokens.py} convert source text into tokens.
 The language recognizes keywords such as \texttt{SET}, \texttt{SYSTEM},
-\texttt{RULE}, \texttt{RUN}, \texttt{OBSERVE}, and \texttt{PATIENT}.
+\texttt{RULE}, \texttt{RUN}, \texttt{OBSERVE}, and \texttt{PATIENT}. Hash
+comments are ignored by the lexer, which aligns the runtime with the editor
+configuration and keeps annotated model files executable.
 
 \subsection{Parsing}
 \texttt{dsl/parser.py} converts tokens into AST nodes. A \texttt{SystemNode}
@@ -101,10 +104,36 @@ OBSERVE {
 
 This model can be checked and run with:
 \begin{verbatim}
+python cdfd.py cdfl lint examples/heat_flow.cdfl
+python cdfd.py cdfl format examples/heat_flow.cdfl
+python cdfd.py cdfl ast examples/heat_flow.cdfl --json
 python cdfd.py validate examples/heat_flow.cdfl
 python cdfd.py run examples/heat_flow.cdfl \
   --out outputs/heat_flow_run.json
 \end{verbatim}
+
+\section{Language Workbench}
+The runtime now exposes a CDFL workbench as strict result envelopes rather than
+only as editor-side convenience:
+\begin{itemize}
+    \item \texttt{cdfl lint}: shared diagnostics for malformed statements,
+    block/list balance, rule syntax, and key-value shape;
+    \item \texttt{cdfl format}: deterministic indentation over blocks and lists;
+    \item \texttt{cdfl ast}: a JSON-safe summary of parser nodes and attributes;
+    \item \texttt{cdfl sample}: the canonical heat-flow model for tutorials,
+    tests, and editor smoke checks.
+\end{itemize}
+These commands are intentionally modest. They make CDFL reviewable and
+repeatable while preserving the parser and executor as the source of semantic
+truth.
+
+\section{Editor Surface}
+The repository now includes \texttt{tools/cdfl-vscode}, the Vura Labs
+\emph{CDFL Language Support} extension. It provides \texttt{.cdfl} file
+association, TextMate highlighting, snippets, local diagnostics, completions,
+hover help, document symbols, formatting, and command-palette actions that call
+the same \texttt{cdfd.py cdfl} runtime commands. The extension is a research
+ergonomics layer, not a second compiler.
 
 \section{Output Semantics}
 CDFL execution produces structured result blocks:
@@ -131,27 +160,29 @@ This is how candidate findings move from exploratory notebooks into reproducible
 runtime claims.
 
 \section{Re-Running the Discoveries in CDFL}
-The final development target is to rerun the selected discovery set from CDFL
-rather than from ad hoc Python scripts. The short path is not to rewrite every
-experiment by hand. The runtime needs a small CDFL extension for parameter
-sweeps, output manifests, and named test families:
+The final development target remains to rerun more of the selected discovery set
+from CDFL rather than from ad hoc Python scripts. The short path is not to
+rewrite every experiment by hand. The current grammar already supports simple
+parameter and discovery declarations such as:
 \begin{verbatim}
-DISCOVERY MujjabiVacuumHysteresis {
-  model: vacuum_memory
-  sweep: pulse_strength [1.0, 2.0, 4.0]
-  output: experiments/outputs/discovery_vacuum_hysteresis.h5
+SWEEP pulse_strength [1.0, 2.0, 4.0]
+DISCOVER {
+  target: vacuum_memory
+  output: discovery_vacuum_hysteresis
   falsify: residual_vanishes_under_controls
 }
 \end{verbatim}
-Once that grammar exists, the same discoveries can be run through
-\texttt{cdfd.py run}, exported as result envelopes, and displayed by VOS or
-CDFD Studio without changing the engine mathematics.
+The remaining work is to connect richer experiment families, manifests, and HDF5
+outputs to these declarations. Once that bridge is complete, selected discoveries
+can be run through \texttt{cdfd.py cdfl run}, exported as result envelopes, and
+displayed by VOS or CDFD Runtime Studio without changing the engine mathematics.
 
 \section{Limitations}
 The current CDFL grammar is intentionally small. It does not yet cover every
 experiment pattern in \texttt{experiments/notebooks}. The next development
-target is to make common sweeps, parameter grids, and discovery runs expressible
-in CDFL without losing Python-level control for advanced experiments.
+target is to make common sweeps, parameter grids, and discovery runs executable
+from CDFL manifests without losing Python-level control for advanced
+experiments.
 
 \section{Conclusion}
 CDFL turns CDFD from a codebase into an executable manuscript language. Its

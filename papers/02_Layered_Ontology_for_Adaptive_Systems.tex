@@ -12,7 +12,7 @@
 \small Founder, Vura Labs\\
 \small Kampala, Uganda\\
 \small ORCID: \href{https://orcid.org/0009-0001-0556-5516}{0009-0001-0556-5516}}
-\date{May 2026}
+\date{June 2026}
 
 \begin{document}
 \maketitle
@@ -61,7 +61,8 @@ hard-code every domain into the kernel.
 
 The ontology layer supplies meaning without contaminating the engine. It maps
 domain concepts to runtime variables, records relationships, and exposes those
-relationships to CDFL, the CLI, and the future web interface.
+relationships to CDFL, the CLI, the optional Runtime Studio, and the editor
+tooling that makes CDFL inspectable before execution.
 
 \section{The Runtime Ontology Stack}
 \subsection{Layer 0: Runtime Mechanics}
@@ -113,7 +114,11 @@ this pipeline through:
 \begin{verbatim}
 python cdfd.py validate examples/heat_flow.cdfl
 python cdfd.py run examples/heat_flow.cdfl
+python cdfd.py cdfl lint examples/heat_flow.cdfl
+python cdfd.py cdfl ast examples/heat_flow.cdfl --json
 \end{verbatim}
+The first two commands preserve the legacy root aliases; the \texttt{cdfl}
+subcommands expose the language workbench explicitly.
 
 \section{Falsification Conditions}
 An ontology mapping fails if:

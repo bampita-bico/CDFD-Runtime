@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import sys
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -30,6 +31,7 @@ import pandas as pd
 import streamlit as st
 
 from domains.registry import DomainRegistry
+from dsl.cdfl_tools import CANONICAL_HEAT_FLOW
 from engine.causal_graph import build_causal_graph
 from engine.kernel import Kernel
 from engine.state import State
@@ -44,7 +46,19 @@ from runtime.diagnostics import (
     result_envelope,
 )
 from runtime.reporting import result_to_html, result_to_markdown
-from runtime.runner import compare_domain, doctor, llm_provider_status, part_ii_diagnostics, run_domain, runtime_info
+from runtime.runner import (
+    cdfl_ast,
+    compare_domain,
+    doctor,
+    format_cdfl_file,
+    lint_cdfl,
+    llm_provider_status,
+    part_ii_diagnostics,
+    run_cdfl,
+    run_domain,
+    runtime_info,
+    validate_cdfl,
+)
 from webapp.viz_helpers import (
     REGIME_COLORS,
     figure_to_bytes,
@@ -293,6 +307,37 @@ def _run_records_table() -> pd.DataFrame:
 
 def _safe_json_bytes(result: dict[str, Any]) -> bytes:
     return (json.dumps(clean_json(result), indent=2, sort_keys=True, allow_nan=False) + "\n").encode("utf-8")
+
+
+def _run_cdfl_text(text: str, action: str, *, nx: int = 16, ny: int = 16) -> dict[str, Any]:
+    tmp_path: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile("w", suffix=".cdfl", prefix="cdfd-studio-", dir="/tmp", delete=False) as handle:
+            handle.write(text)
+            tmp_path = Path(handle.name)
+        if action == "validate":
+            return validate_cdfl(tmp_path, command="streamlit cdfl validate")
+        if action == "lint":
+            return lint_cdfl(tmp_path)
+        if action == "run":
+            return run_cdfl(tmp_path, nx=nx, ny=ny, command=f"streamlit cdfl run --nx {nx} --ny {ny}")
+        if action == "ast":
+            return cdfl_ast(tmp_path)
+        if action == "format":
+            return format_cdfl_file(tmp_path)
+        raise ValueError(f"Unknown CDFL action: {action}")
+    finally:
+        if tmp_path is not None:
+            tmp_path.unlink(missing_ok=True)
+
+
+def _cdfl_diagnostics_frame(result: dict[str, Any]) -> pd.DataFrame:
+    payload = result.get("payload", {})
+    diagnostics = payload.get("diagnostics", []) if isinstance(payload, dict) else []
+    columns = ["severity", "code", "line", "column", "message"]
+    if not diagnostics:
+        return pd.DataFrame(columns=columns)
+    return pd.DataFrame(diagnostics)[columns]
 
 
 def _download_result_controls(result: dict[str, Any], key: str) -> None:
@@ -644,6 +689,85 @@ def _render_cockpit() -> None:
         st.dataframe(records, use_container_width=True, hide_index=True)
 
 
+def _render_cdfl_workbench() -> None:
+    st.session_state.setdefault("cdfl_source", CANONICAL_HEAT_FLOW)
+
+    tools, editor = st.columns([0.9, 2.4])
+    with tools:
+        st.subheader("Run controls")
+        nx = st.slider("Grid X", 4, 64, 16, key="cdfl_nx")
+        ny = st.slider("Grid Y", 4, 64, 16, key="cdfl_ny")
+        b1, b2 = st.columns(2)
+        validate_clicked = b1.button("Validate", type="primary", key="cdfl_validate")
+        run_clicked = b2.button("Run", key="cdfl_run")
+        b3, b4 = st.columns(2)
+        lint_clicked = b3.button("Lint", key="cdfl_lint")
+        format_clicked = b4.button("Format", key="cdfl_format")
+        ast_clicked = st.button("AST", key="cdfl_ast")
+        st.code(
+            "python cdfd.py cdfl lint model.cdfl\n"
+            "python cdfd.py cdfl run model.cdfl --nx 16 --ny 16",
+            language="bash",
+        )
+
+    with editor:
+        source = st.text_area("CDFL model", key="cdfl_source", height=430)
+
+    action = None
+    if validate_clicked:
+        action = "validate"
+    elif run_clicked:
+        action = "run"
+    elif lint_clicked:
+        action = "lint"
+    elif format_clicked:
+        action = "format"
+    elif ast_clicked:
+        action = "ast"
+
+    if action:
+        with st.spinner(f"CDFL {action}"):
+            result = _run_cdfl_text(source, action, nx=nx, ny=ny)
+        st.session_state["cdfl_result"] = result
+        if result.get("kind") == "cdfl_run" and result.get("status") == "ok":
+            _remember_run("cdfl_workbench", result)
+
+    result = st.session_state.get("cdfl_result")
+    if not result:
+        return
+
+    payload = result.get("payload", {})
+    summary = payload.get("diagnostic_summary", {}) if isinstance(payload, dict) else {}
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Status", result.get("status", "unknown"))
+    c2.metric("Kind", result.get("kind", "cdfl"))
+    c3.metric("Nodes", payload.get("node_count", "-") if isinstance(payload, dict) else "-")
+    c4.metric("Diagnostics", f"{summary.get('error', 0)} / {summary.get('warning', 0)} / {summary.get('info', 0)}")
+
+    diagnostics_df = _cdfl_diagnostics_frame(result)
+    if diagnostics_df.empty:
+        st.success("No CDFL diagnostics.")
+    else:
+        st.dataframe(diagnostics_df, use_container_width=True, hide_index=True)
+
+    if result.get("kind") == "cdfl_format" and isinstance(payload, dict):
+        formatted = payload.get("formatted", "")
+        st.code(formatted, language="cdfl")
+        st.download_button(
+            "CDFL",
+            formatted.encode("utf-8"),
+            file_name="formatted.cdfl",
+            mime="text/plain",
+            key="cdfl-formatted-download",
+        )
+    elif result.get("kind") == "cdfl_ast" and isinstance(payload, dict):
+        st.json(clean_json(payload.get("nodes", [])))
+    elif result.get("kind") == "cdfl_run" and isinstance(payload, dict):
+        st.json(clean_json(payload.get("results", [])))
+
+    _download_result_controls(result, "cdfl-workbench-result")
+
+
 def _render_physics_lab() -> None:
     col_side, col_main = st.columns([0.95, 2.6])
     with col_side:
@@ -992,6 +1116,8 @@ def main() -> None:
         st.code(
             "python cdfd.py doctor\n"
             "python cdfd.py gallery --save-run\n"
+            "python cdfd.py cdfl lint examples/heat_flow.cdfl\n"
+            "python cdfd.py cdfl run examples/heat_flow.cdfl --nx 16 --ny 16\n"
             "python cdfd.py compare origins_of_life --scenarios mixed_source_surface_trap meteoritic_seed_retained\n"
             "python cdfd.py report runs/<run>/result.json --format html",
             language="bash",
@@ -1000,9 +1126,10 @@ def main() -> None:
         st.markdown("**Run root:** `runs/`")
         st.markdown("**DOI:** `10.5281/zenodo.20343160`")
 
-    tab_cockpit, tab_physics, tab_ool, tab_atlas, tab_evidence, tab_vos = st.tabs(
+    tab_cockpit, tab_cdfl, tab_physics, tab_ool, tab_atlas, tab_evidence, tab_vos = st.tabs(
         [
             "Runtime Cockpit",
+            "CDFL Workbench",
             "Physics Lab",
             "Origins Lab",
             "Domain Atlas",
@@ -1013,6 +1140,8 @@ def main() -> None:
 
     with tab_cockpit:
         _render_cockpit()
+    with tab_cdfl:
+        _render_cdfl_workbench()
     with tab_physics:
         _render_physics_lab()
     with tab_ool:

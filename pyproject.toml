@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cdfd-runtime"
-version = "1.0.1"
-description = "CLI-first public runtime for Constraint-Driven Flux Dynamics and CDFL execution."
+version = "1.1.0"
+description = "CLI-first public runtime for Constraint-Driven Flux Dynamics, CDFL execution, and optional Studio/editor tooling."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "AGPL-3.0-or-later"
@@ -19,6 +19,8 @@ keywords = [
   "constraint-driven flux dynamics",
   "scientific computing",
   "domain adapters",
+  "runtime studio",
+  "vscode extension",
   "finite audit",
   "reproducible research"
 ]

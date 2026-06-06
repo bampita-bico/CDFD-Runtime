@@ -12,7 +12,7 @@
 \small Founder, Vura Labs\\
 \small Kampala, Uganda\\
 \small ORCID: \href{https://orcid.org/0009-0001-0556-5516}{0009-0001-0556-5516}}
-\date{May 2026}
+\date{June 2026}
 
 \begin{document}
 \maketitle
@@ -57,7 +57,8 @@ The runtime uses a staged ladder:
 \begin{enumerate}
     \item source compiles and imports;
     \item unit tests pass;
-    \item CDFL model validates;
+    \item CDFL model validates and reports zero blocking diagnostics;
+    \item CDFL lint, format, and AST tooling agree with the parser surface;
     \item simulation outputs are finite;
     \item rerun reproduces the qualitative regime;
     \item parameter sensitivity is documented;
@@ -73,6 +74,9 @@ python cdfd.py domains
 python cdfd.py diagnostics
 python cdfd.py demo origins_of_life \
   --source-scenario mixed_source_surface_trap
+python cdfd.py cdfl lint examples/heat_flow.cdfl
+python cdfd.py cdfl format examples/heat_flow.cdfl
+python cdfd.py cdfl ast examples/heat_flow.cdfl --json
 python cdfd.py validate examples/heat_flow.cdfl
 python cdfd.py run examples/heat_flow.cdfl \
   --out outputs/heat_flow_run.json
@@ -84,11 +88,16 @@ values are blockers unless the run is explicitly a boundary-failure test.
 The focused runtime check recorded:
 \begin{verbatim}
 python -m pytest -q tests/test_cli_runtime.py \
-  tests/test_new_engine_upgrades.py
+  tests/test_release_surfaces.py \
+  tests/test_cdfl_vscode_extension.py
 \end{verbatim}
-with 15 passing runtime and native-engine tests. These tests cover CLI runner
-behavior, CDFL parsing and execution, Part II diagnostics export,
-origins-of-life guardrails, app-key redaction, and selected native engine upgrades.
+with 38 passing focused tests. These tests cover CLI runner behavior, CDFL
+parsing and execution, CDFL diagnostics/formatting/AST/sample helpers, Part II
+diagnostics export, origins-of-life guardrails, provider-key redaction,
+release-surface metadata, and the VS Code extension package metadata. A
+separate Extension Development Host smoke exercised the \texttt{.cdfl} language
+mode, commands, diagnostics, completions, symbols, formatting, validation, and
+runtime execution.
 
 \section{Precision Analysis}
 \texttt{experiments/reports/PRECISION\_ANALYSIS.md} argues that ordinary

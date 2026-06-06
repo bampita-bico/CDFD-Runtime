@@ -6,13 +6,13 @@
 \geometry{margin=2.5cm}
 \emergencystretch=3em
 
-\title{\textbf{CDFD Runtime Paper 06: CLI-First Platform and Future Web Architecture}}
+\title{\textbf{CDFD Runtime Paper 06: CLI-First Platform and Web Architecture}}
 \author{Steve Bico Mujjabi, MD\\
 \small Independent Researcher\\
 \small Founder, Vura Labs\\
 \small Kampala, Uganda\\
 \small ORCID: \href{https://orcid.org/0009-0001-0556-5516}{0009-0001-0556-5516}}
-\date{May 2026}
+\date{June 2026}
 
 \begin{document}
 \maketitle
@@ -20,10 +20,11 @@
 \begin{abstract}
 \noindent \textbf{Executive synthesis.} The platform direction is CLI first,
 web app second. The CLI is for serious engine work: reproducible simulations,
-paper diagnostics, debugging, automation, and saved results. An optional web
-studio (\texttt{webapp/}) is a visual layer over the same backend, not a separate
-physics system. This paper defines that boundary and explains how CLI outputs
-flow into optional visual interfaces.
+paper diagnostics, CDFL language workbench commands, debugging, automation, and
+saved results. An optional web studio (\texttt{webapp/}) is a visual layer over
+the same backend, not a separate physics system. Optional LLM provider calls are
+interpretive tools above saved deterministic outputs. This paper defines those
+boundaries and explains how CLI outputs flow into optional visual interfaces.
 \end{abstract}
 
 \paragraph{Greek-symbol convention.}
@@ -57,13 +58,14 @@ The platform order is:
 \begin{enumerate}
     \item core engine;
     \item CLI;
-    \item API server;
+    \item API or service wrappers;
     \item web app.
 \end{enumerate}
-The current repository has the engine and CLI as primary surfaces. The initial
-web studio under \texttt{webapp/} (CDFD Runtime Studio, Streamlit) is optional:
-it is a visual layer over the same kernel, \texttt{runtime/diagnostics.py}, and
-domain adapters and does not duplicate physics logic.
+The current repository has the engine and CLI as primary surfaces. The Streamlit
+studio under \texttt{webapp/} (CDFD Runtime Studio) is optional: it is a visual
+layer over \texttt{runtime/runner.py}, the same kernel,
+\texttt{runtime/diagnostics.py}, CDFL tooling, and domain adapters, and it does
+not duplicate physics logic.
 
 \section{CLI Responsibilities}
 The CLI supports:
@@ -71,9 +73,13 @@ The CLI supports:
     \item listing registered domains (\texttt{cdfd.py domains});
     \item Part II diagnostics export (\texttt{cdfd.py diagnostics});
     \item running domain demos with JSON payloads or OOL source scenarios;
-    \item validating and executing CDFL models;
+    \item validating, executing, linting, formatting, and inspecting CDFL models
+    through \texttt{cdfd.py cdfl ...};
     \item exporting JSON result envelopes;
-    \item app-key boundary checks (\texttt{cdfd.py auth});
+    \item doctor, gallery, compare, report, and explain commands for public
+    smoke tests and reproducible run artifacts;
+    \item optional provider inventory, status, dry-run prompt audit, and
+    research interpretation through \texttt{cdfd.py llm ...};
     \item preserving finite-value and provenance metadata on every command.
 \end{itemize}
 This is the credibility layer. It gives papers exact commands instead of vague
@@ -83,9 +89,12 @@ claims that "the engine was run."
 The public Streamlit studio (\texttt{python -m webapp.run\_server}) already
 provides an initial visual environment: regime-banded trajectories, field
 heatmaps, Part II source-mix panels, a Life Number calculator, Granger-style
-causal graphs from run history, and the \texttt{origins\_of\_life} domain explorer.
-Future CDFD Studio releases may add model building, coherence monitoring, and
-deeper result browsing on top of the same CLI backend.
+causal graphs from run history, the \texttt{origins\_of\_life} domain explorer,
+and a CDFL Workbench. The workbench lets a user edit a CDFL model, validate it,
+lint it, run it, format it, inspect its AST, and export JSON/Markdown/HTML
+result envelopes through the same backend used by the CLI. Future CDFD Studio
+releases may add richer model building, coherence monitoring, and deeper result
+browsing on top of the same runtime backend.
 
 The first public demos remain non-medical and visual:
 \begin{itemize}
@@ -99,30 +108,34 @@ Medical applications require stricter validation, privacy, and user-safety
 boundaries and are not the first public web surface.
 
 \section{API Boundary}
-The API exposes command-like operations:
+Any API or service wrapper exposes command-like operations:
 \begin{itemize}
     \item validate a CDFL model;
     \item run a CDFL model;
+    \item lint, format, and inspect CDFL AST summaries;
     \item retrieve saved result envelopes;
     \item inspect finite audits;
     \item list experiments and selected outputs;
     \item export reports.
 \end{itemize}
-Each endpoint calls \texttt{runtime/runner.py} or a later service wrapper
-around it.
+Each endpoint calls \texttt{runtime/runner.py} or a later service wrapper around
+it. The service layer may add authentication, queues, and storage, but not a
+second physics implementation.
 
 \section{API Keys and the AI Boundary}
-Application keys belong at the application boundary, not inside the physics
-kernel. The runtime can check whether a calling app presents an approved key,
-record that key as a redacted fingerprint in provenance, and then run CDFL or
-domain commands. It does not call an LLM, store LLM credentials, or generate
-application-facing responses. That layer belongs in CDFD Studio, regulated apps,
-research notebooks, or other governed products built above the engine.
+Provider keys belong at the application/provider boundary, not inside the
+physics kernel. The runtime exposes optional \texttt{cdfd.py llm} commands
+above saved deterministic outputs: provider inventory, provider-key status,
+dry-run prompt audit, and provider-backed research interpretation. Supported
+provider shapes are explicit rather than universal. Raw keys are never printed,
+and \texttt{cdfd.py auth} remains only a compatibility alias for provider-key
+status.
 
-This split keeps the engine clean: \texttt{cdfd.py} and
-\texttt{runtime/runner.py} own deterministic execution, finite audits, and
-result envelopes; applications own authentication, user identity, LLM routing,
-rate limits, privacy, and workflow policy.
+This split keeps the engine clean: \texttt{engine/}, CDFL execution, and domain
+adapters produce deterministic result envelopes; \texttt{runtime/llm.py}, the
+CLI, web layer, VOS, or other governed products may interpret saved outputs
+through provider adapters. LLM commentary is therefore a separate interpretive
+artifact, not an input to the engine equations.
 
 \section{Vacuum OS}
 Vacuum OS (VOS) is the proposed operating system layer above CDFD Runtime. VOS
@@ -142,12 +155,12 @@ The experiment outputs already define future panels:
     \item frontier sweep: pattern distribution and candidate triage table;
     \item gigamarathon sweep: domain coverage dashboard.
 \end{itemize}
-The public Streamlit dashboard under \texttt{webapp/dashboard.py} already
-implements an initial subset: regime-banded $\Psi_s$ trajectories, $\Phi$ and
-$C$ field heatmaps, Part II aromatic source-mix bars, a Life Number calculator,
-Granger-style causal edges from run history, and the \texttt{origins\_of\_life}
-domain explorer. The web app presents these as model diagnostics and
-falsification targets, not as empirical proof.
+The public Streamlit dashboard under \texttt{webapp/dashboard.py} implements an
+initial subset: regime-banded $\Psi_s$ trajectories, $\Phi$ and $C$ field
+heatmaps, Part II aromatic source-mix bars, a Life Number calculator,
+Granger-style causal edges from run history, the \texttt{origins\_of\_life}
+domain explorer, and the CDFL Workbench. The web app presents these as model
+diagnostics and falsification targets, not as empirical proof.
 
 \section{Conclusion}
 The platform makes one thing unmistakable: CDFD is executable. The CLI

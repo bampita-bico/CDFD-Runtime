@@ -5,6 +5,7 @@ import numpy as np
 
 import cdfd
 import runtime.llm as llm_module
+from dsl.cdfl_tools import CANONICAL_HEAT_FLOW, analyze_cdfl_text, format_cdfl_text
 from engine.causal_graph import build_causal_graph
 from runtime.diagnostics import (
     adaptive_ratio,
@@ -21,10 +22,14 @@ from runtime.artifacts import create_run_bundle
 from runtime.reporting import result_to_html, result_to_markdown
 from runtime.runner import (
     app_auth_status,
+    cdfl_ast,
+    cdfl_sample,
     compare_domain,
     doctor,
     explain_result,
     gallery,
+    format_cdfl_file,
+    lint_cdfl,
     llm_explain_result,
     llm_provider_inventory,
     llm_provider_status,
@@ -63,7 +68,10 @@ def test_runtime_info_is_cli_first():
     assert result["payload"]["primary_surface"] == "cli"
     assert result["payload"]["platform_order"][1] == "cli"
     assert "diagnostics" in result["payload"]["commands"]
+    assert "cdfl" in result["payload"]["commands"]
     assert "webapp" in result["payload"]["optional_surfaces"]
+    assert "vscode_extension" in result["payload"]["optional_surfaces"]
+    assert result["payload"]["entrypoints"]["vscode_extension_optional"] == "tools/cdfl-vscode"
 
 
 def test_runtime_guidance_is_domain_neutral():
@@ -166,6 +174,7 @@ OBSERVE {
     assert validation["status"] == "ok"
     assert validation["payload"]["valid"] is True
     assert validation["payload"]["node_count"] == 4
+    assert validation["payload"]["diagnostic_summary"]["error"] == 0
 
     run = run_cdfl(model, nx=4, ny=4)
     assert run["status"] == "ok"
@@ -175,6 +184,59 @@ OBSERVE {
     system = run["payload"]["results"][0]
     assert "runtime_guidance" in system
     assert not [key for key in system if key.startswith("reco")]
+
+
+def test_cdfl_tooling_lint_format_ast_sample_and_cli(tmp_path):
+    model = tmp_path / "model.cdfl"
+    model.write_text(CANONICAL_HEAT_FLOW)
+
+    analysis = analyze_cdfl_text(model.read_text())
+    assert analysis["valid"] is True
+    assert analysis["node_count"] == 5
+    assert analysis["diagnostic_summary"] == {"error": 0, "warning": 0, "info": 0}
+
+    lint = lint_cdfl(model)
+    assert lint["status"] == "ok"
+    assert lint["kind"] == "cdfl_lint"
+    assert lint["payload"]["diagnostic_summary"]["error"] == 0
+
+    ast = cdfl_ast(model)
+    assert ast["status"] == "ok"
+    assert ast["payload"]["nodes"][1]["type"] == "SystemNode"
+    assert ast["payload"]["nodes"][1]["attributes"]["name"] == "HeatChannel"
+
+    messy = tmp_path / "messy.cdfl"
+    messy.write_text("SET domain: physics\nSYSTEM Messy {\nflux: 1.2\nconstraint: 0.9\nstate: psi\n}\n")
+    formatted_text = format_cdfl_text(messy.read_text())
+    assert "  flux: 1.2" in formatted_text
+
+    formatted_out = tmp_path / "formatted.cdfl"
+    formatted = format_cdfl_file(messy, output_path=formatted_out)
+    assert formatted["status"] == "ok"
+    assert formatted["payload"]["changed"] is True
+    assert "  state: psi" in formatted_out.read_text()
+
+    sample_out = tmp_path / "sample.cdfl"
+    sample = cdfl_sample(output_path=sample_out)
+    assert sample["status"] == "ok"
+    assert sample_out.read_text() == CANONICAL_HEAT_FLOW
+
+    bad = tmp_path / "bad.cdfl"
+    bad.write_text("RUN Engine {\n  duration: 0.05\n")
+    bad_lint = lint_cdfl(bad)
+    assert bad_lint["status"] == "error"
+    assert bad_lint["payload"]["diagnostic_summary"]["error"] == 1
+
+    lint_json = tmp_path / "lint.json"
+    assert cdfd.main(["cdfl", "lint", str(model), "--json", "--out", str(lint_json)]) == 0
+    assert json.loads(lint_json.read_text())["kind"] == "cdfl_lint"
+
+    cli_formatted = tmp_path / "cli-formatted.cdfl"
+    assert cdfd.main(["cdfl", "format", str(messy), "--out", str(cli_formatted), "--json"]) == 0
+    assert "  constraint: 0.9" in cli_formatted.read_text()
+
+    assert cdfd.main(["cdfl", "ast", str(model), "--json"]) == 0
+    assert cdfd.main(["cdfl", "sample", "--out", str(tmp_path / "cli-sample.cdfl"), "--json"]) == 0
 
 
 def test_cli_main_can_write_json(tmp_path):
