@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-Security fixes target the current public release line, `1.0.x`, and the active
+Security fixes target the current public release line, `1.1.x`, and the active
 main branch.
 
 ## Reporting

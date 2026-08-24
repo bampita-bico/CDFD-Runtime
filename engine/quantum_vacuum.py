@@ -1,7 +1,8 @@
 """
-Quantum Vacuum Module — The CDFT Torus Knot Universe
-Incorporating the Vacuum Equation of State (Psi = Phi / C)
-and the T(2,n) Mass Spectrum Solver.
+Conditional CDFT torus-knot amplitude toy model.
+
+The equations below are postulated parametrisations for internal numerical
+experiments. They do not derive vacuum properties or particle masses.
 """
 
 import numpy as np
@@ -10,8 +11,8 @@ import math
 class QuantumVacuum:
     def __init__(self, m_e=0.51099895, alpha=1/137.035999177):
         """
-        Initialize the vacuum with the fundamental constants.
-        From m_e and the Z3 uniqueness theorem, all other masses are derived.
+        Initialize a conditional amplitude ansatz from supplied values.
+        It does not provide a Z3 uniqueness theorem or derive other masses.
         """
         self.m_e = m_e
         self.alpha = alpha
@@ -35,14 +36,13 @@ class QuantumVacuum:
 
     def solve_theta_n(self, n, ngrid=10_000):
         """
-        Solves the Vacuum EOS Virial Theorem: n*theta_n = Q_tilde(n, theta_n).
-        Psi = Phi / C
+        Solves the postulated ansatz relation n*theta_n = Q_tilde(n, theta_n).
         Returns theta_n in radians.
         """
         if n == 3:
             return self.theta_3
         if n % 2 == 0 and n < 4:
-            raise ValueError("n=2 is excluded by the Fourier exclusion theorem.")
+            raise ValueError("n=2 is excluded by this postulated Fourier ansatz.")
 
         thetas = np.linspace(1e-9, np.pi/n - 1e-9, ngrid)
         lhs = n * thetas
@@ -68,9 +68,8 @@ class QuantumVacuum:
 
     def spawn_knot(self, n):
         """
-        Instantiate a T(2,n) topological excitation in the vacuum.
-        Calculates the equilibrium orientation theta_n, the energy scale M_n,
-        the mode masses, and the amplitude split.
+        Evaluate a T(2,n) conditional amplitude construction.
+        The returned scales and modes are model output, not physical particles.
         """
         if n in self.knots:
             return self.knots[n]
@@ -86,7 +85,7 @@ class QuantumVacuum:
         n_neg = sum(1 for a in amps if a < 0)
         n_pos = n - n_neg
 
-        # Amplitude Split Theorem Prediction (Paper VIII)
+        # Conditional amplitude split calculation (Paper VIII archive).
         split_formula_neg = math.floor(5*n/8) - math.ceil(3*n/8) + 1
         # Correction for boundary integers (Paper IX)
         if (3*n) % 8 == 0 or (5*n) % 8 == 0:
@@ -99,7 +98,8 @@ class QuantumVacuum:
             "M_n": m_n,
             "masses": masses,
             "sum_masses": sum(masses),
-            "predicted_sum": 2 * n * m_n, # The Universal Mass Sum Rule
+            "conditional_sum": 2 * n * m_n,
+            "claim_status": "postulated amplitude ansatz; not a particle prediction",
             "n_pos": n_pos,
             "n_neg": n_neg,
             "split_formula_neg": split_formula_neg

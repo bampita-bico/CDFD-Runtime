@@ -9,33 +9,17 @@ import traceback
 from pathlib import Path
 from typing import Any
 
-from domains.demo_runner import run_domain_demo
-from domains.registry import DomainRegistry
 from dsl.cdfl_tools import CANONICAL_HEAT_FLOW, analyze_cdfl_text, format_cdfl_text
 from dsl.executor import Executor
 from dsl.lexer import tokenize
 from dsl.parser import ParseError, parse
-from runtime.diagnostics import (
-    LIFE_NUMBER_SUPPLY_GUARDRAIL,
-    aromatic_source_mix_scenario,
-    aromatic_source_mix_scenarios,
-    best_aromatic_source_mix,
-    clean_json,
-    photochemical_material_status,
-    result_envelope,
-    write_json,
-)
+from runtime.diagnostics import clean_json, result_envelope, write_json
 from runtime.llm import llm_explain_result, llm_provider_inventory, llm_provider_status
 from runtime.reporting import explanation_for_result, explanation_to_markdown, write_report
 
 
 CRITICAL_IMPORTS = ("numpy",)
-OPTIONAL_IMPORTS = ("matplotlib", "pandas", "streamlit")
-GALLERY_SCENARIOS = (
-    "mixed_source_surface_trap",
-    "meteoritic_seed_retained",
-    "terrestrial_synthesis",
-)
+OPTIONAL_IMPORTS = ("matplotlib", "pandas")
 
 
 def load_json_object(path: str | Path) -> dict[str, Any]:
@@ -45,35 +29,20 @@ def load_json_object(path: str | Path) -> dict[str, Any]:
     return data
 
 
-def list_domains() -> dict[str, Any]:
-    names = sorted(DomainRegistry.default().list_domains())
-    return result_envelope(
-        "domain_list",
-        "cdfd domains",
-        {"count": len(names), "domains": names},
-    )
-
-
 def runtime_info() -> dict[str, Any]:
-    domains = sorted(DomainRegistry.default().list_domains())
     return result_envelope(
         "runtime_info",
         "cdfd info",
         {
             "name": "CDFD Runtime",
             "language": "CDFL",
-            "platform_order": ["engine", "cli", "api", "webapp", "editor"],
+            "platform_order": ["engine", "cli", "api", "editor"],
             "primary_surface": "cli",
             "cli_status": "available",
-            "domain_count": len(domains),
             "commands": [
                 "info",
-                "domains",
-                "demo",
-                "diagnostics",
                 "doctor",
                 "gallery",
-                "compare",
                 "report",
                 "explain",
                 "llm",
@@ -86,9 +55,6 @@ def runtime_info() -> dict[str, Any]:
             "entrypoints": {
                 "cli": "python cdfd.py",
                 "cdfl_tooling": "python cdfd.py cdfl lint examples/heat_flow.cdfl",
-                "legacy_domain_cli": "python -m domains",
-                "diagnostics_export": "python cdfd.py diagnostics --out experiments/outputs/part_ii_runtime_diagnostics.json",
-                "webapp_optional": "python -m webapp.run_server",
                 "vscode_extension_optional": "tools/cdfl-vscode",
             },
             "app_boundary": {
@@ -105,17 +71,14 @@ def runtime_info() -> dict[str, Any]:
                 ],
                 "llm_research_call": "python cdfd.py llm explain runs/<run>/result.json",
                 "llm_layer": "optional provider calls above the deterministic runtime engine",
-                "vos": "Vacuum OS orchestration layer above CDFD Runtime",
             },
             "core_surfaces": [
                 "engine",
-                "domains",
                 "dsl",
                 "runtime",
                 "validation",
-                "discovery",
             ],
-            "optional_surfaces": ["webapp", "vscode_extension"],
+            "optional_surfaces": ["vscode_extension"],
         },
     )
 
@@ -123,7 +86,6 @@ def runtime_info() -> dict[str, Any]:
 def doctor() -> dict[str, Any]:
     """Check the public runtime surfaces without mutating repository state."""
     root = Path(__file__).resolve().parents[1]
-    domains = sorted(DomainRegistry.default().list_domains())
     checks: list[dict[str, Any]] = []
     warnings: list[str] = []
     errors: list[str] = []
@@ -144,13 +106,12 @@ def doctor() -> dict[str, Any]:
             f"import:{module}",
             importlib.util.find_spec(module) is not None,
             "module importable",
-            critical=module != "streamlit",
+            critical=False,
         )
 
     add("cli_entrypoint", (root / "cdfd.py").exists(), "cdfd.py present")
     add("example_model", (root / "examples" / "heat_flow.cdfl").exists(), "examples/heat_flow.cdfl present")
-    add("webapp_entrypoint", (root / "webapp" / "run_server.py").exists(), "python -m webapp.run_server present", critical=False)
-    add("domain_registry", len(domains) > 0, f"{len(domains)} domain adapters")
+    add("claim_boundary", (root / "CLAIM_BOUNDARY.md").exists(), "CLAIM_BOUNDARY.md present")
 
     try:
         info = runtime_info()
@@ -163,7 +124,6 @@ def doctor() -> dict[str, Any]:
 
     payload = {
         "root": str(root),
-        "domain_count": len(domains),
         "checks": checks,
         "summary": {
             "ok": sum(1 for item in checks if item["status"] == "ok"),
@@ -182,24 +142,9 @@ def doctor() -> dict[str, Any]:
 
 
 def gallery(*, nx: int = 4, ny: int = 4, steps: int = 1, include_cdfl: bool = True) -> dict[str, Any]:
-    """Run a curated, quick CDFD gallery for demos and public smoke checks."""
+    """Run the neutral CDFL example as a compact software smoke check."""
     root = Path(__file__).resolve().parents[1]
-    runs: list[dict[str, Any]] = [
-        runtime_info(),
-        run_domain("physics", nx=nx, ny=ny, steps=steps),
-        run_domain(
-            "origins_of_life",
-            {"source_scenario": "mixed_source_surface_trap"},
-            nx=nx,
-            ny=ny,
-            steps=steps,
-        ),
-        run_domain("medicine", nx=nx, ny=ny, steps=steps),
-        run_domain("networks", nx=nx, ny=ny, steps=steps),
-        run_domain("climate", nx=nx, ny=ny, steps=steps),
-        run_domain("economics", nx=nx, ny=ny, steps=steps),
-        part_ii_diagnostics(include_demo=False),
-    ]
+    runs: list[dict[str, Any]] = [runtime_info()]
     model = root / "examples" / "heat_flow.cdfl"
     if include_cdfl and model.exists():
         runs.append(validate_cdfl(model))
@@ -213,111 +158,18 @@ def gallery(*, nx: int = 4, ny: int = 4, steps: int = 1, include_cdfl: bool = Tr
             "status": item.get("status"),
             "finite": item.get("finite_audit", {}).get("all_finite"),
         }
-        if isinstance(payload, dict):
-            if "domain" in payload:
-                highlight["domain"] = payload["domain"]
-                highlight["regime"] = payload.get("regime")
-                highlight["mean_psi"] = (payload.get("final") or {}).get("mean_psi")
-            if "best_aromatic_source_mix" in payload:
-                best = payload["best_aromatic_source_mix"]
-                highlight["best_source_mix"] = best.get("scenario")
-                highlight["functional_score"] = best.get("functional_score")
         highlights.append(highlight)
 
     return result_envelope(
         "runtime_gallery",
         "cdfd gallery",
         {
-            "description": "Curated quick tour of physics, origins of life, medicine, networks, climate, economics, Part II diagnostics, and CDFL runtime surfaces.",
-            "vos_preview": {
-                "boundary": "VOS and optional LLM provider calls sit above the deterministic runtime engine.",
-                "future_hooks": ["run queue", "provider-key status", "saved experiments", "research-assistant LLM calls"],
-            },
+            "description": "Compact CDFL parse, validation, execution, and finite-audit smoke check.",
             "parameters": {"nx": nx, "ny": ny, "steps": steps, "include_cdfl": include_cdfl},
             "highlights": highlights,
             "runs": runs,
         },
     )
-
-
-def compare_domain(
-    domain: str,
-    scenarios: list[str],
-    *,
-    nx: int = 4,
-    ny: int = 4,
-    steps: int = 1,
-) -> dict[str, Any]:
-    """Run scenario comparisons through the same domain adapter path as `demo`."""
-    rows: list[dict[str, Any]] = []
-    results: list[dict[str, Any]] = []
-    for scenario in scenarios:
-        payload = {"source_scenario": scenario} if domain == "origins_of_life" else {"scenario": scenario}
-        result = run_domain(domain, payload, nx=nx, ny=ny, steps=steps)
-        results.append(result)
-        body = result.get("payload", {})
-        final = body.get("final", {}) if isinstance(body, dict) else {}
-        diag = body.get("domain_diagnostics", {}) if isinstance(body, dict) else {}
-        source_mix = diag.get("aromatic_source_mix", {}) if isinstance(diag, dict) else {}
-        mean_psi = final.get("mean_psi")
-        functional_score = source_mix.get("functional_score")
-        score = functional_score if functional_score is not None else (
-            -abs(float(mean_psi) - 1.0) if mean_psi is not None else None
-        )
-        rows.append(
-            {
-                "label": f"{domain}:{scenario}",
-                "domain": domain,
-                "scenario": scenario,
-                "status": result.get("status"),
-                "finite": result.get("finite_audit", {}).get("all_finite"),
-                "regime": body.get("regime") if isinstance(body, dict) else None,
-                "mean_psi": mean_psi,
-                "functional_score": functional_score,
-                "score": score,
-                "interpretation": body.get("interpretation") if isinstance(body, dict) else None,
-            }
-        )
-    ranked = sorted(rows, key=lambda row: (row["score"] is not None, row["score"]), reverse=True)
-    return result_envelope(
-        "runtime_compare",
-        f"cdfd compare {domain}",
-        {
-            "domain": domain,
-            "parameters": {"nx": nx, "ny": ny, "steps": steps, "scenarios": scenarios},
-            "ranked": ranked,
-            "results": results,
-        },
-    )
-
-
-def part_ii_diagnostics(
-    *,
-    scenario: str | None = None,
-    include_demo: bool = True,
-    demo_steps: int = 12,
-    demo_nx: int = 8,
-    demo_ny: int = 8,
-) -> dict[str, Any]:
-    """Part II-aligned runtime diagnostics (Paper 7 source-mix, Paper 11 guardrails)."""
-    payload: dict[str, Any] = {
-        "life_number_guardrail": LIFE_NUMBER_SUPPLY_GUARDRAIL,
-        "photochemical_material_status": photochemical_material_status(),
-        "aromatic_source_mix_scenarios": aromatic_source_mix_scenarios(),
-        "best_aromatic_source_mix": best_aromatic_source_mix(),
-    }
-    if scenario:
-        payload["selected_scenario"] = aromatic_source_mix_scenario(scenario)
-    if include_demo:
-        payload["origins_of_life_demo"] = run_domain_demo(
-            "origins_of_life",
-            {"source_scenario": scenario or "mixed_source_surface_trap"},
-            nx=demo_nx,
-            ny=demo_ny,
-            steps=demo_steps,
-        )
-    command = f"cdfd diagnostics{f' --scenario {scenario}' if scenario else ''}"
-    return result_envelope("part_ii_diagnostics", command, payload)
 
 
 def app_auth_status(
@@ -340,32 +192,6 @@ def app_auth_status(
         api_key_file=api_key_file,
         key_env=key_env,
     )
-
-
-def run_domain(
-    domain: str,
-    payload: dict[str, Any] | None = None,
-    *,
-    nx: int = 16,
-    ny: int = 16,
-    steps: int = 24,
-    dt: float | None = None,
-    include_traceback: bool = False,
-) -> dict[str, Any]:
-    try:
-        result = run_domain_demo(domain, payload or {}, nx=nx, ny=ny, steps=steps, dt=dt)
-        return result_envelope("domain_demo", f"cdfd demo {domain}", result)
-    except Exception as exc:
-        errors = [str(exc)]
-        if include_traceback:
-            errors.append(traceback.format_exc())
-        return result_envelope(
-            "domain_demo",
-            f"cdfd demo {domain}",
-            {"domain": domain},
-            status="error",
-            errors=errors,
-        )
 
 
 def _read_cdfl(path: str | Path) -> str:

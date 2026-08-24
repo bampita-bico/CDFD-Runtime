@@ -1,6 +1,6 @@
 {
   "title": "CDFD Runtime: Constraint-Driven Flux Dynamics and CDFL Execution Engine",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "doi": "10.5281/zenodo.20343160",
   "creators": [
     {
@@ -16,29 +16,15 @@
     "CDFD Runtime",
     "CDFL",
     "executable model grammar",
-    "adaptive operating ratio",
-    "structural memory",
-    "domain adapters",
-    "ontology runtime",
-    "runtime studio",
-    "VS Code language support",
     "deterministic execution",
     "finite audit",
-    "scientific computing",
-    "computational modeling",
-    "systems science",
-    "complex systems",
-    "physics simulation",
-    "origins of life",
-    "bioenergetics",
-    "hypothesis triage",
-    "falsification",
-    "candidate laws",
-    "Mujjabi laws",
-    "Mujjabi tests",
     "reproducible research",
-    "open science",
-    "research software"
+    "research software",
+    "VS Code language support",
+    "scientific computing",
+    "claim boundaries",
+    "toy models",
+    "open science"
   ],
   "related_identifiers": [
     {
@@ -52,5 +38,5 @@
       "scheme": "doi"
     }
   ],
-  "description": "Public command-line runtime for Constraint-Driven Flux Dynamics and CDFL. The release includes deterministic CLI execution, the CDFL parser and executor, CDFL lint/format/AST tooling, runtime finite-audit helpers, domain adapters, ontology execution, optional Runtime Studio, VS Code CDFL language support, curated public experiments, a 12-paper runtime spine, compiled PDFs, and tests. Outputs are model diagnostics and falsification targets, not empirical proof or deployed decision systems."
+  "description": "Slim public command-line runtime for Constraint-Driven Flux Dynamics and CDFL. The active release provides deterministic CLI execution, CDFL lint/format/AST tooling, runtime finite-audit helpers, one canonical example model, one reproducible smoke experiment, VS Code CDFL language support, and focused tests. Outputs are deterministic toy-model diagnostics and software-audit artifacts, not empirical evidence, calibrated forecasts, or deployed decision systems."
 }

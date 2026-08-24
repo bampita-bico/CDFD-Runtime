@@ -15,9 +15,9 @@
       "@id": "./",
       "@type": "Dataset",
       "name": "CDFD Runtime: Constraint-Driven Flux Dynamics and CDFL Execution Engine",
-      "description": "Research software crate for the CDFD Runtime, including CLI code, CDFL tooling, optional Runtime Studio, VS Code language support, runtime papers, metadata, tests, domain adapters, and reproducibility gates.",
+      "description": "Research software crate for the slim CDFD Runtime release: CLI code, CDFL tooling, smoke experiment, research-software paper, metadata, and tests. Outputs are deterministic toy-model diagnostics, not empirical validation or decision guidance.",
       "identifier": "https://doi.org/10.5281/zenodo.20343160",
-      "datePublished": "2026-06-06",
+      "datePublished": "2026-08-25",
       "license": {
         "@id": "LICENSE"
       },
@@ -35,34 +35,25 @@
           "@id": "runtime/"
         },
         {
-          "@id": "domains/"
-        },
-        {
           "@id": "dsl/"
         },
         {
           "@id": "engine/"
         },
         {
-          "@id": "discovery/"
-        },
-        {
           "@id": "ontology/"
         },
         {
-          "@id": "webapp/"
+          "@id": "experiments/"
         },
         {
           "@id": "tools/cdfl-vscode/"
         },
         {
-          "@id": "papers/"
+          "@id": "docs/paper.md"
         },
         {
           "@id": "tests/"
-        },
-        {
-          "@id": "docs/domain_maturity_matrix.json"
         },
         {
           "@id": "CITATION.cff"
@@ -91,14 +82,9 @@
       "runtimePlatform": "Python >=3.10"
     },
     {
-      "@id": "docs/domain_maturity_matrix.json",
+      "@id": "docs/paper.md",
       "@type": "File",
-      "name": "Machine-readable domain maturity matrix"
-    },
-    {
-      "@id": "papers/",
-      "@type": "Dataset",
-      "name": "Runtime paper sources and PDFs"
+      "name": "Research-software paper draft"
     },
     {
       "@id": "tools/cdfl-vscode/",

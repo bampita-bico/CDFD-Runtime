@@ -10,13 +10,15 @@ After installation:
 cdfd --help
 cdfd doctor --json
 cdfd gallery --save-run --json --out outputs/gallery.json
-cdfd compare origins_of_life --scenarios mixed_source_surface_trap meteoritic_seed_retained --json
 cdfd report outputs/gallery.json --format markdown --out outputs/gallery_report.md
 cdfd explain outputs/gallery.json --format markdown --out outputs/gallery_explain.md
 cdfd cdfl lint examples/heat_flow.cdfl --json
 cdfd cdfl format examples/heat_flow.cdfl --json
 cdfd cdfl ast examples/heat_flow.cdfl --json
 cdfd cdfl sample --out /tmp/heat_flow.cdfl
+cdfd validate examples/heat_flow.cdfl
+cdfd run examples/heat_flow.cdfl --nx 4 --ny 4 --out outputs/run.json
+python experiments/run_cdfl_smoke.py --out outputs/cdfl_smoke.json
 cdfd llm providers --json
 cdfd llm status --provider openai --model <model> --json
 cdfd llm explain outputs/gallery.json --provider openai --model <model> --dry-run
@@ -31,12 +33,7 @@ environment variables, `CDFD_LLM_API_KEY`, `--key-env`, or `--api-key-file`.
 Provider keys are not printed. `cdfd llm providers` lists direct support for
 `openai`, `openai-compatible`, `anthropic`, `gemini`, `mistral`, `groq`,
 `openrouter`, and `ollama`. `cdfd auth` remains as a compatibility alias for
-`cdfd llm status`; it no longer checks a local runtime allowlist.
-`cdfd llm explain ... --save-run` stores separate `llm_interpretation.json` and
-`llm_interpretation.md` artifacts with provider/model/base-host provenance,
-temperature, max-token, context-length, and prompt-template metadata. These
-artifacts are interpretive only; the deterministic runtime result stays in
-`result.json`.
+`cdfd llm status`.
 
 ## Python Backend
 
@@ -44,9 +41,7 @@ The CLI delegates to `runtime.runner`:
 
 - `runtime_info()`
 - `doctor()`
-- `gallery(nx=4, ny=4, steps=1)`
-- `compare_domain(domain, scenarios, nx=4, ny=4, steps=1)`
-- `run_domain(domain, payload=None, nx=16, ny=16, steps=24, dt=None)`
+- `gallery(nx=4, ny=4, steps=1, include_cdfl=True)`
 - `validate_cdfl(path)`
 - `run_cdfl(path, nx=16, ny=16)`
 - `lint_cdfl(path)`
@@ -80,3 +75,7 @@ The API returns modeling diagnostics and, only when `llm_explain_result` is
 explicitly called, provider-generated research interpretation. It does not
 return clinical advice, engineering certification, financial advice, legal
 advice, or deployed safety decisions.
+
+Legacy domain-demo, compare, and diagnostics commands were removed from the
+active CLI. Archived implementations remain outside the repository; see
+`ARCHIVE_NOTICE_2026-08-25.md`.

@@ -1,5 +1,0 @@
--r requirements.txt
-altair>=5.0
-matplotlib>=3.8
-pandas>=2.1
-streamlit>=1.32

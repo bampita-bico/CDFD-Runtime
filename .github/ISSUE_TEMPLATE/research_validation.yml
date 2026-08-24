@@ -7,7 +7,7 @@ body:
     id: claim
     attributes:
       label: Claim or runtime surface
-      description: Which runtime result, adapter, paper, or CDFL model is being tested?
+      description: Which CDFL model, command, run bundle, or smoke experiment is being tested?
     validations:
       required: true
   - type: textarea

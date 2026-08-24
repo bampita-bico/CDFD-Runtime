@@ -1,4 +1,4 @@
-"""Run artifact helpers for CLI and webapp surfaces."""
+"""Run artifact helpers for CLI run bundles and reports."""
 from __future__ import annotations
 
 import re

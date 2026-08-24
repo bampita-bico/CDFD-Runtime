@@ -254,8 +254,11 @@ class State:
 
     def calculate_disease_horizon(self, threshold=1.5):
         """
-        AFL Disease Horizon Equation.
-        Predicts the time (t_collapse) until the system crosses the critical Psi_s threshold.
+        Legacy compatibility helper for a toy threshold-crossing time estimate.
+
+        This extrapolates the current simulated Psi_s slope to a caller-provided
+        numerical threshold. It is not a disease forecast, prognosis, or
+        clinically calibrated time-to-event model.
         """
         self.update_psi()
         self.dpsi_dt = np.where(self.psi_s > 0, self.psi_s * 0.01, 0) # Conservative fallback derivative if history not available
@@ -276,4 +279,5 @@ class State:
         self.meta["t_collapse_min"] = float(np.min(t_col))
         finite = t_col[np.isfinite(t_col)]
         self.meta["t_collapse_mean"] = float(np.mean(finite)) if finite.size else float("inf")
+        self.meta["toy_horizon_status"] = "uncalibrated simulated threshold-crossing estimate"
         return t_col

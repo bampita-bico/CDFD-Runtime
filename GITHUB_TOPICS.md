@@ -1,8 +1,6 @@
 # GitHub Topics
 
 `cdfd`, `cdfd-runtime`, `cdfl`, `constraint-driven-flux-dynamics`,
-`adaptive-systems`, `scientific-computing`, `computational-modeling`,
-`systems-science`, `complex-systems`, `physics-simulation`,
-`domain-adapters`, `reproducible-research`, `open-science`,
-`origins-of-life`, `bioenergetics`, `falsifiability`, `research-software`,
-`agplv3`, `vscode-extension`, `streamlit`
+`scientific-computing`, `computational-modeling`, `reproducible-research`,
+`open-science`, `research-software`, `domain-specific-language`,
+`finite-audit`, `claim-boundaries`, `toy-models`, `vscode-extension`, `agplv3`

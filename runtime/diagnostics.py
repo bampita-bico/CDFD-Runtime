@@ -23,25 +23,6 @@ VALUE_FLOOR = 1e-9
 VALUE_CAP = 1e4
 PSI_CAP = 1e4
 
-AROMATIC_SOURCE_SCENARIOS = (
-    ("terrestrial_synthesis", 1.0, 0.0, 0.60, 0.70, 0.40, "local synthesis with moderate retention"),
-    ("meteoritic_pulse_unretained", 0.2, 1.4, 0.20, 0.35, 0.80, "exogenous pulse without localization"),
-    ("meteoritic_seed_retained", 0.5, 0.8, 0.75, 0.65, 0.50, "delivered organics retained in a boundary"),
-    ("mixed_source_surface_trap", 0.8, 0.5, 0.85, 0.80, 0.45, "local plus exogenous feedstock trapped at a surface"),
-    ("high_feedstock_overload", 0.7, 1.5, 0.70, 0.70, 1.80, "feedstock enrichment with damaging overload"),
-)
-LIFE_NUMBER_SUPPLY_GUARDRAIL = (
-    "source supply is upstream of retention and coupling; exogenous delivery is not itself a Life Number gate"
-)
-PHOTOCHEMICAL_MATERIAL_STATUS = {
-    "chlorophyll_status": "late high-performance endpoint of energy-input amplification",
-    "melanin_status": "eumelanin is a mature endpoint exemplar of surplus stabilization, not an origin requirement",
-    "eumelanin_status": (
-        "modern broadband absorption, redox, and radical-buffering exemplar; "
-        "prebiotic analogues may be chemically different"
-    ),
-}
-
 
 def utc_timestamp() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
@@ -177,78 +158,6 @@ def operating_ratio(phi: float, c: float, s: float = 1.0, m_s: float = 1.0) -> f
     return bounded_float((phi_b / max(c_b, VALUE_FLOOR)) * s_b * ms_b, high=PSI_CAP)
 
 
-def life_number(
-    input_energy: float,
-    sigma_e: float,
-    sigma_p: float,
-    tau_relax: float,
-    stabilization: float,
-    maintenance_energy: float = 1.0,
-    S: float = 1.0,
-    M_s: float = 1.0,
-) -> float:
-    """Tri-regime Life Number used by the Part II and biology releases."""
-    denominator = max(stabilization * maintenance_energy, EPS)
-    return float((input_energy * sigma_e * sigma_p * tau_relax / denominator) * S * M_s)
-
-
-def aromatic_source_mix_row(
-    scenario: str,
-    terrestrial_feedstock: float,
-    exogenous_feedstock: float,
-    retention_factor: float,
-    coupling_factor: float,
-    damage_load: float,
-    interpretation: str = "",
-) -> dict[str, Any]:
-    """Part II Paper 7 aromatic source-mix diagnostic row."""
-    terrestrial = bounded_float(terrestrial_feedstock)
-    exogenous = bounded_float(exogenous_feedstock)
-    retention = bounded_float(retention_factor, high=1.0)
-    coupling = bounded_float(coupling_factor, high=1.0)
-    damage = bounded_float(damage_load)
-    raw_pool = terrestrial + exogenous
-    retained_pool = retention * raw_pool
-    functional_score = retained_pool * coupling / (1.0 + damage)
-    return {
-        "scenario": scenario,
-        "terrestrial_feedstock": terrestrial,
-        "exogenous_feedstock": exogenous,
-        "raw_pool": raw_pool,
-        "retention_factor": retention,
-        "retained_pool": retained_pool,
-        "coupling_factor": coupling,
-        "damage_load": damage,
-        "functional_score": functional_score,
-        "interpretation": interpretation,
-    }
-
-
-def aromatic_source_mix_scenarios() -> list[dict[str, Any]]:
-    """Return the guarded source-mix scenarios used by the Part II Paper 7 runtime."""
-    return [aromatic_source_mix_row(*row) for row in AROMATIC_SOURCE_SCENARIOS]
-
-
-def aromatic_source_mix_scenario(name: str) -> dict[str, Any]:
-    """Look up a named aromatic source-mix scenario."""
-    for row in aromatic_source_mix_scenarios():
-        if row["scenario"] == name:
-            return row
-    known = ", ".join(row[0] for row in AROMATIC_SOURCE_SCENARIOS)
-    raise KeyError(f"unknown aromatic source scenario {name!r}; known scenarios: {known}")
-
-
-def best_aromatic_source_mix() -> dict[str, Any]:
-    """Best source-mix row under the retained functional-score diagnostic."""
-    rows = aromatic_source_mix_scenarios()
-    return max(rows, key=lambda row: float(row["functional_score"]))
-
-
-def photochemical_material_status() -> dict[str, str]:
-    """Guardrail for mature photochemical endpoint examples used in Part II Paper 11."""
-    return dict(PHOTOCHEMICAL_MATERIAL_STATUS)
-
-
 def regime_label(psi: float, low: float = 0.8, high: float = 1.2) -> str:
     if not math.isfinite(float(psi)):
         return "non_finite"
@@ -347,6 +256,11 @@ def result_envelope(
         "warnings": list(warnings or []),
         "errors": list(errors or []),
         "finite_audit": finite_audit(body),
+        "claim_boundary": (
+            "Deterministic toy-model output only; not empirical proof or other empirical evidence, a "
+            "calibrated forecast, clinical advice, engineering certification, "
+            "or proof of a cross-domain mechanism."
+        ),
         "payload": body,
     }
 

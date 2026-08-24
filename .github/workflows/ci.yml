@@ -25,41 +25,32 @@ jobs:
       - name: Install package and release extras
         run: |
           python -m pip install --upgrade pip
-          python -m pip install -e ".[dev,web,experiments]"
+          python -m pip install -e ".[dev,experiments]"
           python -m pip check
 
-      - name: Whitespace and generated-matrix checks
+      - name: Whitespace and paper checks
         run: |
           git diff --check
-          python scripts/generate_domain_matrix.py --check
+          python scripts/check_joss_paper.py
 
       - name: Runtime smoke gates
         run: |
           mkdir -p /tmp/cdfd-ci
           cdfd doctor --json --out /tmp/cdfd-ci/doctor.json
           cdfd gallery --json --out /tmp/cdfd-ci/gallery.json
-          cdfd compare origins_of_life --scenarios mixed_source_surface_trap meteoritic_seed_retained --json --out /tmp/cdfd-ci/compare.json
           cdfd report /tmp/cdfd-ci/gallery.json --format markdown --out /tmp/cdfd-ci/gallery_report.md
           cdfd explain /tmp/cdfd-ci/gallery.json --format markdown --out /tmp/cdfd-ci/gallery_explain.md
           cdfd cdfl lint examples/heat_flow.cdfl --json
           cdfd cdfl ast examples/heat_flow.cdfl --json
           cdfd cdfl sample --out /tmp/cdfd-ci/sample.cdfl
           cdfd cdfl validate /tmp/cdfd-ci/sample.cdfl --json
+          python experiments/run_cdfl_smoke.py --out /tmp/cdfd-ci/cdfl_smoke.json
 
       - name: Tests
         run: |
-          python -m pytest -q tests/test_cli_runtime.py tests/test_new_engine_upgrades.py tests/test_release_surfaces.py tests/test_cdfl_vscode_extension.py
+          python -m pytest -q tests/test_cli_runtime.py tests/test_release_surfaces.py tests/test_joss_submission_assets.py tests/test_cdfl_vscode_extension.py
 
       - name: Build wheel and sdist
         run: |
           python -m build
           python -m twine check dist/*
-
-      - name: PDF source gate
-        run: |
-          if command -v latexmk >/dev/null 2>&1; then
-            papers/build_pdfs.sh
-          else
-            test "$(find papers/PDFs -maxdepth 1 -name '*.pdf' | wc -l)" -eq 12
-            echo "latexmk not installed; verified 12 committed runtime PDFs"
-          fi

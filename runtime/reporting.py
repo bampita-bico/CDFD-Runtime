@@ -14,40 +14,27 @@ RUNTIME_CITATION = (
     "and CDFL Execution Engine. Zenodo. https://doi.org/10.5281/zenodo.20343160"
 )
 CLAIM_BOUNDARY = (
-    "CDFD Runtime output is deterministic modeling and hypothesis triage. "
-    "It is not empirical proof, clinical advice, engineering certification, "
-    "or a deployed safety, financial, or medical decision system."
+    "CDFD Runtime output is deterministic toy-model execution and hypothesis "
+    "triage. It is not empirical proof or other empirical evidence, a calibrated forecast, clinical "
+    "advice, engineering certification, or a deployed safety, financial, or "
+    "medical decision system."
 )
 
 
 def _payload_summary(payload: Mapping[str, Any]) -> list[str]:
     lines: list[str] = []
-    if "domain" in payload:
-        lines.append(f"- Domain: `{payload.get('domain')}`")
-    if "regime" in payload:
-        lines.append(f"- Regime: `{payload.get('regime')}`")
-    final = payload.get("final")
-    if isinstance(final, Mapping):
-        for key in ("mean_phi", "mean_C", "mean_psi"):
-            if key in final:
-                lines.append(f"- Final `{key}`: `{final[key]}`")
-    if "best_aromatic_source_mix" in payload:
-        best = payload["best_aromatic_source_mix"]
-        if isinstance(best, Mapping):
-            lines.append(
-                "- Best source mix: "
-                f"`{best.get('scenario')}` score `{best.get('functional_score')}`"
-            )
-    if "ranked" in payload:
-        ranked = payload["ranked"]
-        if isinstance(ranked, list) and ranked:
-            top = ranked[0]
-            if isinstance(top, Mapping):
-                lines.append(
-                    "- Top comparison row: "
-                    f"`{top.get('scenario') or top.get('label')}` "
-                    f"score `{top.get('score')}`"
-                )
+    if payload.get("file"):
+        lines.append(f"- Model file: `{payload.get('file')}`")
+    if "valid" in payload:
+        lines.append(f"- CDFL valid: `{payload.get('valid')}`")
+    if "node_count" in payload:
+        lines.append(f"- AST nodes: `{payload.get('node_count')}`")
+    if "description" in payload:
+        lines.append(f"- Summary: {payload.get('description')}")
+    if "highlights" in payload and isinstance(payload["highlights"], list):
+        kinds = [row.get("kind") for row in payload["highlights"] if isinstance(row, Mapping)]
+        if kinds:
+            lines.append(f"- Gallery kinds: `{', '.join(str(k) for k in kinds if k)}`")
     if "checks" in payload:
         checks = payload["checks"]
         if isinstance(checks, list):
@@ -61,21 +48,15 @@ def _payload_summary(payload: Mapping[str, Any]) -> list[str]:
 
 
 def _equation_notes(result: Mapping[str, Any]) -> list[str]:
-    kind = result.get("kind")
-    payload = result.get("payload", {})
     notes = [
-        "- Adaptive operating ratio: `Psi_s = (Phi / C) S M_s`.",
+        "- Adaptive operating ratio: `Psi_s = (Phi / C) S M_s` (bookkeeping notation only).",
         "- Regime grammar: constrained below the lower guardrail, balanced near the guardrail window, overload above it.",
+        "- A finite JSON audit shows only that recorded values were finite, not that the model is calibrated or empirically adequate.",
     ]
-    if kind in {"part_ii_diagnostics", "runtime_compare"} or (
-        isinstance(payload, Mapping) and payload.get("domain") == "origins_of_life"
-    ):
+    kind = result.get("kind")
+    if kind in {"cdfl_run", "cdfl_validation", "runtime_gallery"}:
         notes.append(
-            "- Life Number diagnostic: input energy, coupling, relaxation, stabilization, S, and M_s are read as a viability surface, not as an origin proof."
-        )
-    if kind == "runtime_compare":
-        notes.append(
-            "- Comparison ranking uses source-mix score when present, otherwise a simple closeness-to-Psi_s=1 diagnostic."
+            "- CDFL outputs are software execution records for declared toy models, not domain validation."
         )
     return notes
 
@@ -90,27 +71,16 @@ def explanation_for_result(result: Mapping[str, Any]) -> dict[str, Any]:
 
     result_notes: list[str] = []
     if isinstance(payload, Mapping):
-        final = payload.get("final")
-        if isinstance(final, Mapping) and "mean_psi" in final:
-            result_notes.append(
-                f"Final mean Psi_s is {final.get('mean_psi')}; the adapter reports regime {payload.get('regime')}."
-            )
-        if payload.get("interpretation"):
-            result_notes.append(str(payload["interpretation"]))
-        if payload.get("best_aromatic_source_mix"):
-            best = payload["best_aromatic_source_mix"]
-            if isinstance(best, Mapping):
-                result_notes.append(
-                    f"Best aromatic source mix is {best.get('scenario')} with functional score {best.get('functional_score')}."
-                )
-        if payload.get("ranked"):
-            ranked = payload["ranked"]
-            if isinstance(ranked, list) and ranked:
-                top = ranked[0]
-                if isinstance(top, Mapping):
-                    result_notes.append(
-                        f"Top ranked scenario is {top.get('scenario') or top.get('label')} with score {top.get('score')}."
-                    )
+        if payload.get("valid") is not None:
+            result_notes.append(f"CDFL validation valid={payload.get('valid')}.")
+        if payload.get("node_count") is not None:
+            result_notes.append(f"Model parsed {payload.get('node_count')} AST nodes.")
+        if payload.get("description"):
+            result_notes.append(str(payload["description"]))
+        if payload.get("highlights") and isinstance(payload["highlights"], list):
+            kinds = [row.get("kind") for row in payload["highlights"] if isinstance(row, Mapping)]
+            if kinds:
+                result_notes.append(f"Gallery covered: {', '.join(str(k) for k in kinds if k)}.")
         if payload.get("checks"):
             checks = payload["checks"]
             if isinstance(checks, list):
@@ -129,7 +99,7 @@ def explanation_for_result(result: Mapping[str, Any]) -> dict[str, Any]:
     return {
         "headline": f"{kind or 'runtime result'} finished with status {status}.",
         "equations": _equation_notes(data),
-        "interpretation": result_notes or ["No domain-specific interpretation was present in the saved result."],
+        "interpretation": result_notes or ["No additional interpretation fields were present in the saved result."],
         "what_this_supports": [
             "The run exercises the public runtime path recorded in provenance.",
             "The finite audit records whether JSON-visible numeric output stayed finite.",

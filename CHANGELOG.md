@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.1.1 - 2026-08-25 (slim release cleanup)
+
+- Reduced the active repository to one research-software paper (`paper.md`), CDFL
+  execution/audit CLI surfaces, and one public smoke experiment.
+- Archived domain ontology packages, domain engine modules, runtime orchestration
+  helpers, and the copied `methods/` package outside the repository.
+- Removed bundled `domains`, `demo`, `compare`, and `diagnostics` CLI commands.
+- Updated CI, tests, metadata, and release bundle scripts for the slim surface.
+
+## 1.1.1 - 2026-08-19
+
+- Reframed executable outputs as deterministic toy-model diagnostics rather than laws, predictions, validation, or cross-domain proof.
+- Updated the runtime claim-boundary document, metadata, experiment labels, and all 12 runtime papers for the Part I--IV correction record.
+- Retitled Runtime Papers 10 and 12, updated their case-study wording, and rebuilt the release PDFs.
+
 ## 1.1.0 - 2026-06-06
 
 - Added `pyproject.toml` packaging metadata and the installed `cdfd` console command.

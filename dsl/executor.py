@@ -113,7 +113,8 @@ class Executor:
                 "M_n": knot["M_n"],
                 "masses": knot["masses"],
                 "sum_masses": knot["sum_masses"],
-                "predicted_sum": knot["predicted_sum"],
+                "conditional_sum": knot["conditional_sum"],
+                "claim_status": knot["claim_status"],
                 "n_pos": knot["n_pos"],
                 "n_neg": knot["n_neg"],
                 "split_formula_neg": knot["split_formula_neg"],
@@ -241,22 +242,8 @@ class Executor:
         return history
 
     def _apply_domain_mapping(self, state):
-        if not self.domain:
-            return
-        try:
-            from domains.registry import DomainRegistry
-            registry = DomainRegistry.default()
-            adapter = registry.get(self.domain)
-            patient_data = next(
-                (v for v in self.context.values() if isinstance(v, dict) and "eGFR" in v),
-                None,
-            )
-            if patient_data:
-                phi_val, c_val = adapter.map_to_engine(patient_data)
-                state.phi[:] = phi_val
-                state.C[:] = c_val
-        except Exception:
-            pass
+        """Reserved hook for explicit CDFL domain payloads; no bundled adapters."""
+        _ = state
 
     # ------------------------------------------------------------------ observe
 

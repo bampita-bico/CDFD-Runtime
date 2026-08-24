@@ -9,7 +9,7 @@ clear claim limits.
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-python -m pip install -e ".[dev,web,experiments]"
+python -m pip install -e ".[dev,experiments]"
 ```
 
 Core CLI-only work can use:
@@ -24,32 +24,19 @@ Run the focused public gates before opening a pull request:
 
 ```bash
 git diff --check
-python scripts/generate_domain_matrix.py --check
+python scripts/check_joss_paper.py
 cdfd doctor --json
 cdfd gallery --json --out /tmp/cdfd-gallery.json
-python -m pytest -q tests/test_cli_runtime.py tests/test_new_engine_upgrades.py tests/test_release_surfaces.py
+python experiments/run_cdfl_smoke.py --out /tmp/cdfl-smoke.json
+python -m pytest -q tests/test_cli_runtime.py tests/test_release_surfaces.py tests/test_joss_submission_assets.py
 ```
-
-When LaTeX is available:
-
-```bash
-papers/build_pdfs.sh
-```
-
-## Adapter Changes
-
-Domain adapters need to:
-
-- Map inputs into CDFD runtime variables without external network state.
-- Return finite JSON-visible outputs.
-- Keep medical, engineering, financial, policy, and safety domains inside the
-  modeling boundary.
-- Update `docs/domain_maturity_matrix.json` through
-  `python scripts/generate_domain_matrix.py` when adapter registration changes.
 
 ## Public Claims
 
 Do not present runtime output as empirical proof, clinical advice, engineering
 certification, financial advice, or deployed safety logic. Use release-paper,
 DOI, and result-envelope evidence when a public statement refers to a runtime
-capability.
+artifact.
+
+Legacy domain adapters, multi-paper runtime manuscripts, and the old experiment
+corpus are archived outside the repo. See `ARCHIVE_NOTICE_2026-08-25.md`.
