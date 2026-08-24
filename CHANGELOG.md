@@ -19,7 +19,7 @@
 
 - Added `pyproject.toml` packaging metadata and the installed `cdfd` console command.
 - Split dependencies into core, web, experiments, dev, and docs groups.
-- Added CI gates for tests, doctor, gallery, compare, reporting, packaging, and PDF presence.
+- Expanded release gates for tests, doctor, gallery, compare, reporting, packaging, and PDF presence.
 - Added CodeMeta, RO-Crate, contribution, security, support, and release-process surfaces.
 - Added a generated 196-domain maturity matrix with risk classifications.
 - Added the `cdfd cdfl` workbench commands for validate, run, lint, format, AST, and sample generation.

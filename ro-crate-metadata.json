@@ -93,6 +93,12 @@
       "programmingLanguage": "JavaScript"
     },
     {
+      "@id": "tools/cdfl-vscode/",
+      "@type": "SoftwareSourceCode",
+      "name": "CDFL Language Support for VS Code",
+      "programmingLanguage": "JavaScript"
+    },
+    {
       "@id": "tests/",
       "@type": "Dataset",
       "name": "Focused runtime tests"
